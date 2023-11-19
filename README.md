@@ -1,14 +1,49 @@
-# Project
+# 🛰️ SatCLIP - A Global, General-Purpose Geographic Location Encoder
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+![CLIP](/figures/satclip.png)
 
-As the maintainer of this project, please make a few updates:
+## Approach
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+SatCLIP trains location and image encoders via contrastive learning, by matching images to their corresponding locations. This is analogous to the CLIP approach, which matches images to their corresponding text. Through this process, the location encoder learns characteristics of a location, as represented by satellite imagery.
+
+## Overview
+
+Usage of SatCLIP is simple:
+
+```python
+from satclip.model import *
+from satclip.location_encoder import *
+
+model_geo = GeoCLIP(
+    embed_dim=512,
+    image_resolution=224, vision_layers=4, vision_width=768, vision_patch_size=32, # Image encoder
+    le_type='sphericalharmonics', pe_type="siren", legendre_polys=10 # Location encoder
+)
+
+img_batch = torch.randn(32, 13, 224, 224) # Represents a batch of 32 images
+loc_batch = torch.randn(32, 2) # Represents the corresponding 32 locations (lon/lat)
+
+with torch.no_grad():
+    logits_per_image, logits_per_coord = model_geo(img_batch, loc_batch)
+    probs = logits_per_image.softmax(dim=-1).detach().cpu().numpy()
+```
+
+## Training
+
+You first need to download the *S2-100k* dataset 
+in `/data/geoclip_s2`:
+```python
+TODO
+```
+
+Now, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train GeoCLIP by running:
+```bash
+python clip/main.py
+```
+
+## Experiments
+
+TODO
 
 ## Contributing
 
