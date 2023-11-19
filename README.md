@@ -31,7 +31,7 @@ with torch.no_grad():
 ## Training
 
 You first need to download the *S2-100k* dataset 
-in `/data/geoclip_s2`:
+in `/data/s2`:
 ```python
 TODO
 ```
