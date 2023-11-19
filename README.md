@@ -14,17 +14,17 @@ Usage of SatCLIP is simple:
 from satclip.model import *
 from satclip.location_encoder import *
 
-model_geo = GeoCLIP(
+model = SatCLIP(
     embed_dim=512,
-    image_resolution=224, vision_layers=4, vision_width=768, vision_patch_size=32, # Image encoder
-    le_type='sphericalharmonics', pe_type="siren", legendre_polys=10 # Location encoder
+    image_resolution=224, in_channels=13, vision_layers=4, vision_width=768, vision_patch_size=32, # Image encoder
+    le_type='sphericalharmonics', pe_type='siren', legendre_polys=10, frequency_num=16, max_radius=360, min_radius=1, harmonics_calculation='analytic'  # Location encoder
 )
 
 img_batch = torch.randn(32, 13, 224, 224) # Represents a batch of 32 images
 loc_batch = torch.randn(32, 2) # Represents the corresponding 32 locations (lon/lat)
 
 with torch.no_grad():
-    logits_per_image, logits_per_coord = model_geo(img_batch, loc_batch)
+    logits_per_image, logits_per_coord = model(img_batch, loc_batch)
     probs = logits_per_image.softmax(dim=-1).detach().cpu().numpy()
 ```
 
