@@ -11,8 +11,8 @@ SatCLIP trains location and image encoders via contrastive learning, by matching
 Usage of SatCLIP is simple:
 
 ```python
-from satclip.model import *
-from satclip.location_encoder import *
+from model import *
+from location_encoder import *
 
 model = SatCLIP(
     embed_dim=512,
@@ -30,20 +30,61 @@ with torch.no_grad():
 
 ## Training
 
-You first need to download the *S2-100k* dataset 
-in `/data/s2`:
-```python
-TODO
+You first need to download the *S2-100k* dataset in `/data/s2`. First, download the index file:
+```bash
+cd data/s2
+wget https://satclip.z13.web.core.windows.net/satclip/index.csv
+```
+Within `/data/s2`, navigate to `/images`, download all images and unpack them:
+```bash
+cd images
+wget https://satclip.z13.web.core.windows.net/satclip/satclip.tar
+tar -xzf satclip.tar.gz
 ```
 
-Now, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train GeoCLIP by running:
+Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train GeoCLIP by running:
 ```bash
 python clip/main.py
 ```
 
+## Pretrained Models
+
+We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded as follows:
+* SatCLIP-ResNet18-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l10.ckpt` 
+* SatCLIP-ResNet18-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l40.ckpt` 
+* SatCLIP-ResNet50-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet50-l10.ckpt` 
+* SatCLIP-ResNet50-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet50-l40.ckpt` 
+* SatCLIP-ViT16-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-vit16-l10.ckpt` 
+* SatCLIP-ViT16-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-vit16-l40.ckpt` 
+
+Usage of pretrained models is simple:
+```python
+from load import get_satclip
+
+device = 'cuda'
+
+c = torch.randn(32, 2) # Represents a batch of 32 locations (lon/lat)
+
+model = get_satclip('path_to_satclip', device=device) #Only loads location encoder by default
+model.eval()
+with torch.no_grad():
+  emb  = model(c.double().to(device)).detach().cpu()
+```
+
 ## Experiments
 
-TODO
+Examples of how to use SatCLIP for downstream tasks will be added shortly.
+
+## Citation
+
+```bibtex
+@article{klemmer2023satclip,
+  title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
+  author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Russwurm, Marc},
+  journal={TBA},
+  year={2023}
+}
+```
 
 ## Contributing
 
