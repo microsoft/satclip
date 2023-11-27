@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json.schemastore.org/component-detection-manifest.json",
+    "Registrations": [
+      {
+        "component": {
+          "type": "git",
+          "git": {
+            "repositoryUrl": "https://github.com/MarcCoru/locationencoder",
+            "commitHash": "9ba4d31097885f2c309b2241d6ef49a157899b62"
+          }
+        }
+      },
+      {
+        "component": {
+          "type": "git",
+          "git": {
+            "repositoryUrl": "https://github.com/openai/CLIP",
+            "commitHash": "a1d071733d7111c9c014f024669f959182114e33"
+          }
+        }
+    }
+    ]
+
+}

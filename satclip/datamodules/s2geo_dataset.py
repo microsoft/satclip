@@ -76,7 +76,7 @@ class S2GeoDataModule(pl.LightningDataModule):
         raise NotImplementedError
 
 class S2Geo(NonGeoDataset):
-    """S2Geo dataset.
+    """S2-100K dataset.
 
     This dataset contains 100,000 256x256 patches of 12 band Sentinel imagery sampled randomly
     from Sentinel 2 scenes on the Microsoft Planetary Computer that have <20% cloud cover,
@@ -97,9 +97,9 @@ class S2Geo(NonGeoDataset):
         transform: Optional[Callable[[Dict[str, Tensor]], Dict[str, Tensor]]] = None,
         mode: Optional[str] = "both",
     ) -> None:
-        """Initialize a new S2Geo dataset instance.
+        """Initialize a new S2-100K dataset instance.
         Args:
-            root: root directory of S2 pre-sampled dataset
+            root: root directory of S2-100K pre-sampled dataset
             transform: torch transform to apply to a sample
             mode: which data to return (options are "both" or "points"), useful for embedding locations without loading images 
         """

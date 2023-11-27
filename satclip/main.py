@@ -9,8 +9,6 @@ from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.cli import LightningCLI
 from loss import SatCLIPLoss
 from model import SatCLIP
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
 
 torch.set_float32_matmul_precision('high')
 
@@ -34,11 +32,7 @@ class SatCLIPLightningModule(lightning.pytorch.LightningModule):
         learning_rate=1e-4,
         weight_decay=0.01,
         num_hidden_layers=2,
-        capacity=256,
-        rcf_empirical_data_dir=None, 
-        rcf_seed=0,
-        rcf_empirical_transform='pretrained',
-        
+        capacity=256,        
     ) -> None:
         super().__init__()
 
@@ -59,9 +53,6 @@ class SatCLIPLightningModule(lightning.pytorch.LightningModule):
             sh_embedding_dims=sh_embedding_dims,
             num_hidden_layers=num_hidden_layers,
             capacity=capacity,
-            rcf_empirical_data_dir=rcf_empirical_data_dir, 
-            rcf_seed=rcf_seed,
-            rcf_empirical_transform=rcf_empirical_transform
         )
 
         self.loss_fun = SatCLIPLoss()

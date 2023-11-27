@@ -39,7 +39,7 @@ Within `/data/s2`, navigate to `/images`, download all images and unpack them:
 ```bash
 cd images
 wget https://satclip.z13.web.core.windows.net/satclip/satclip.tar
-tar -xzf satclip.tar.gz
+tar -xf satclip.tar
 ```
 
 Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train GeoCLIP by running:
