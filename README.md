@@ -1,6 +1,7 @@
 # 🛰️ SatCLIP - A Global, General-Purpose Geographic Location Encoder
 
 ![CLIP](/figures/satclip.png)
+*Overview of the pretraining and deployment pipeline for SatCLIP.*
 
 ## Approach
 
@@ -47,7 +48,14 @@ Now, to train **SatCLIP** models, set the paths correctly, adapt training config
 python clip/main.py
 ```
 
+### Use of the S2-100K dataset
+
+The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images sampled from Sentinel-2 via the [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/). Copernicus Sentinel data is captured between Jan 1, 2021 and May 17, 2023. The dataset is sampled approximately uniformly over landmass and only includes images without cloud coverage. The dataset is available for research purposes only. If you use the dataset, please cite our paper. More information on the dataset can be found in our [paper](https://arxiv.org/abs/2311.17179).
+
 ## Pretrained Models
+
+![CLIP](/figures/globes.gif)
+*Visualization of embeddings obtained by different location encoders for locations around the globe.*
 
 We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded as follows:
 * SatCLIP-ResNet18-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l10.ckpt` 
@@ -78,11 +86,13 @@ Examples of how to use SatCLIP for downstream tasks will be added shortly.
 ## Citation
 
 ```bibtex
-@article{klemmer2023satclip,
-  title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
-  author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Russwurm, Marc},
-  journal={TBA},
-  year={2023}
+@misc{klemmer2023satclip,
+      title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery}, 
+      author={Konstantin Klemmer and Esther Rolf and Caleb Robinson and Lester Mackey and Marc Rußwurm},
+      year={2023},
+      eprint={2311.17179},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```
 

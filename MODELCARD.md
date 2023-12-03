@@ -21,6 +21,8 @@ SatCLIP is a model for contrastive pretraining of satellite image-location pairs
 
 SatCLIP includes an *image* and a *location* encoder. The image encoder processes multi-spectral satellite images of size `[height, width, 13]` into `[d]`-dimensional latent vectors. The location encoder processes location coordinates `[longitude, latitude]` into the same `[d]`-dimensional space. 
 
+SatCLIP is a model trained and tested for use in research projects. It is not intended for use in production environments.
+
 ### Downstream Use 
 
 The SatCLIP location encoder learns location characteristics, as captured by the satellite images, and can be deployed for downstream geospatial prediction tasks. Practically, this involves *querying* the location encoder for the `[d]`-dimensional vector embedding of all downstream locations and then using that embedding as predictor during downstream learning. In our paper, we show the useability of the learned location embeddings for predicting e.g. population density or biomes.
@@ -30,6 +32,7 @@ The SatCLIP location encoder learns location characteristics, as captured by the
 Potential use cases of SatCLIP which we did build the model for and did not test for include:
 * The SatCLIP image encoder can in theory be used for helping with satellite image localization. If this application interests you, we encourage you to check work focusing on this, e.g. [Cepeda et al. (2023)](https://arxiv.org/abs/2309.16020). 
 * Fine-grained geographic problems (i.e. problems constrained to small geographic areas or including many close locations) are out of scope for SatCLIP. SatCLIP location encoders are pretrained for global-scale use.
+* Any use outside of research projects is currently out of scope as we don't evaluate SatCLIP in production environments.
 
 ## Bias, Risks, and Limitations
 
