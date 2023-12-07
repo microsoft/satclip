@@ -6,7 +6,7 @@
 
 ## Approach
 
-SatCLIP trains location and image encoders via contrastive learning, by matching images to their corresponding locations. This is analogous to the CLIP approach, which matches images to their corresponding text. Through this process, the location encoder learns characteristics of a location, as represented by satellite imagery.
+SatCLIP trains location and image encoders via contrastive learning, by matching images to their corresponding locations. This is analogous to the CLIP approach, which matches images to their corresponding text. Through this process, the location encoder learns characteristics of a location, as represented by satellite imagery. For more details, check out our [paper](https://arxiv.org/abs/2311.17179).
 
 ## Overview
 
@@ -83,7 +83,8 @@ with torch.no_grad():
 
 ## Experiments
 
-Examples of how to use SatCLIP for downstream tasks will be added shortly.
+Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab)for the following experiments:
+* [00 - Simple usage example](notebooks/00_simple_usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/master/notebooks/00-Simple-SatCLIP-Usage.ipynb)
 
 ## Citation
 
