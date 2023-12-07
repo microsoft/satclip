@@ -84,7 +84,7 @@ with torch.no_grad():
 ## Examples
 
 Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab)for the following experiments:
-* [00 - Simple usage example](notebooks/00_simple_usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/00_Simple_SatCLIP_Usage.ipynb)
+* [00 - Simple usage example](notebooks/00_Simple_SatCLIP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/00_Simple_SatCLIP_Usage.ipynb)
 
 ## Citation
 
