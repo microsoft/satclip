@@ -1,6 +1,7 @@
 # 🛰️ SatCLIP - A Global, General-Purpose Geographic Location Encoder
 
 ![CLIP](/figures/satclip.png)
+
 *Overview of the pretraining and deployment pipeline for SatCLIP.*
 
 ## Approach
@@ -55,6 +56,7 @@ The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images samp
 ## Pretrained Models
 
 ![CLIP](/figures/globes.gif)
+
 *Visualization of embeddings obtained by different location encoders for locations around the globe.*
 
 We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded as follows:
