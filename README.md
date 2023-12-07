@@ -81,21 +81,19 @@ with torch.no_grad():
   emb  = model(c.double().to(device)).detach().cpu()
 ```
 
-## Experiments
+## Examples
 
 Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab)for the following experiments:
-* [00 - Simple usage example](notebooks/00_simple_usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/master/notebooks/00-Simple-SatCLIP-Usage.ipynb)
+* [00 - Simple usage example](notebooks/00_simple_usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/00_Simple_SatCLIP_Usage.ipynb)
 
 ## Citation
 
 ```bibtex
-@misc{klemmer2023satclip,
-      title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery}, 
-      author={Konstantin Klemmer and Esther Rolf and Caleb Robinson and Lester Mackey and Marc Rußwurm},
-      year={2023},
-      eprint={2311.17179},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{klemmer2023satclip,
+  title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
+  author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Ru{\ss}wurm, Marc},
+  journal={arXiv preprint arXiv:2311.17179},
+  year={2023}
 }
 ```
 
