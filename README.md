@@ -85,6 +85,7 @@ with torch.no_grad():
 
 Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab)for the following experiments:
 * [00 - Simple usage example](notebooks/00_Simple_SatCLIP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/00_Simple_SatCLIP_Usage.ipynb)
+* [01 - Air temperature prediction with SatCLIP](notebooks/01_Example_Air_Temperature_Prediction.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/01_Example_Air_Temperature_Prediction.ipynb)
 
 ## Citation
 
