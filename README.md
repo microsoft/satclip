@@ -44,7 +44,7 @@ wget https://satclip.z13.web.core.windows.net/satclip/satclip.tar
 tar -xf satclip.tar
 ```
 
-Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train GeoCLIP by running:
+Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train SatCLIP by running:
 ```bash
 python clip/main.py
 ```
