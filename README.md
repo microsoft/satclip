@@ -81,6 +81,8 @@ with torch.no_grad():
   emb  = model(c.double().to(device)).detach().cpu()
 ```
 
+You can also access SatCLIP model weights directly via [Hugging Face](https://huggingface.co/microsoft?search_models=satclip).
+
 ## Examples
 
 Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab)for the following experiments:
