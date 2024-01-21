@@ -85,9 +85,19 @@ You can also access SatCLIP model weights directly via [Hugging Face](https://hu
 
 ## Examples
 
-Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab)for the following experiments:
-* [00 - Simple usage example](notebooks/00_Simple_SatCLIP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/00_Simple_SatCLIP_Usage.ipynb)
-* [01 - Air temperature prediction with SatCLIP](notebooks/01_Example_Air_Temperature_Prediction.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/01_Example_Air_Temperature_Prediction.ipynb)
+Examples on how to obtain and use pretrained SatCLIP embeddings can be found in the `notebooks` folder. We provide notebooks (optimized for use with Google Colab) for the following use cases.
+
+*Setup:*
+* [A01 - Simple usage example](notebooks/A01_Simple_SatCLIP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/A01_Simple_SatCLIP_Usage.ipynb)
+* [A02 - Load models from Hugging Face](notebooks/A02_SatCLIP_Hugging_Face_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/A02_SatCLIP_Hugging_Face_Usage.ipynb)
+
+*Example use cases:*
+* [B01 - Air temperature prediction with SatCLIP](notebooks/B01_Example_Air_Temperature_Prediction.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/B01_Example_Air_Temperature_Prediction.ipynb)
+
+*Use baseline pretrained location encoders:*
+* [C01 - Simple CSP usage](notebooks/C01_Simple_CSP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/C01_Simple_CSP_Usage.ipynb)
+* [C02 - Simple GeoCLIP usage](notebooks/C02_Simple_GeoCLIP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/C02_Simple_GeoCLIP_Usage.ipynb)
+* [C03 - Simple GPS2Vec usage](notebooks/C03_Simple_GPS2Vec_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/C03_Simple_GPS2Vec_Usage.ipynb)
 
 ## Citation
 
