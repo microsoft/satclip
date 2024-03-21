@@ -93,6 +93,7 @@ Examples on how to obtain and use pretrained SatCLIP embeddings can be found in 
 
 *Example use cases:*
 * [B01 - Air temperature prediction with SatCLIP](notebooks/B01_Example_Air_Temperature_Prediction.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/B01_Example_Air_Temperature_Prediction.ipynb)
+* [B02 - Example Image Localization](notebooks/B02_Example_Image_Localization.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/B02_Example_Image_Localization.ipynb)
 
 *Use baseline pretrained location encoders:*
 * [C01 - Simple CSP usage](notebooks/C01_Simple_CSP_Usage.ipynb) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/microsoft/satclip/blob/main/notebooks/C01_Simple_CSP_Usage.ipynb)
