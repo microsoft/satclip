@@ -13,6 +13,6 @@ def get_satclip(ckpt_path, device, return_all=False):
     geo_model = lightning_model.model
 
     if return_all:
-        return geo_model.eval
+        return geo_model
     else:
         return geo_model.location
