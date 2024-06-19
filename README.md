@@ -46,7 +46,7 @@ tar -xf satclip.tar
 
 Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `clip/configs/default.yaml` and train SatCLIP by running:
 ```bash
-python clip/main.py
+python satclip/main.py
 ```
 
 ### Use of the S2-100K dataset
