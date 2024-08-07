@@ -1,11 +1,9 @@
-import argparse
-import os
 from datetime import datetime
+from pathlib import Path
 
 import lightning.pytorch
 import torch
 from datamodules.s2geo_dataset import S2GeoDataModule
-from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.cli import LightningCLI
 from loss import SatCLIPLoss
 from model import SatCLIP
@@ -32,7 +30,7 @@ class SatCLIPLightningModule(lightning.pytorch.LightningModule):
         learning_rate=1e-4,
         weight_decay=0.01,
         num_hidden_layers=2,
-        capacity=256,        
+        capacity=256,
     ) -> None:
         super().__init__()
 
@@ -113,9 +111,7 @@ class MyLightningCLI(LightningCLI):
         parser.add_argument("--watchmodel", action="store_true")
 
 
-def cli_main(default_config_filename="/configs/default.yaml"):
-    
-
+def cli_main(default_config_filename="./configs/default.yaml"):
     save_config_fn = default_config_filename.replace(".yaml", "-latest.yaml")
     # modify configs/default.yaml for learning rate etc.
     cli = MyLightningCLI(
@@ -140,6 +136,12 @@ def cli_main(default_config_filename="/configs/default.yaml"):
         cli.trainer.logger.experiment.name = run_name
         # this seems to be necessary to force logging of datamodule hyperparams
         cli.trainer.logger.log_hyperparams(cli.datamodule.hparams)
+
+    # Create folder to log configs
+    # NOTE: Lightning does not handle config paths with subfolders
+    dirname_cfg = Path(default_config_filename).parent
+    dir_log_cfg = Path(cli.trainer.log_dir) / dirname_cfg
+    dir_log_cfg.mkdir(parents=True, exist_ok=True)
 
     cli.trainer.fit(
         model=cli.model,
