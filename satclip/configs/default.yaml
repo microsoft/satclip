@@ -20,7 +20,7 @@ model:
   vision_layers: 4
   vision_width: 128
   vision_patch_size: 32
-  in_channels: 4
+  in_channels: 13
   le_type: 'sphericalharmonics'
   frequency_num: 16
   max_radius: 0.01
