@@ -1,13 +1,23 @@
-from main import *
+# flake8: noqa
+import warnings
 
-def get_satclip(ckpt_path, device, return_all=False):
-    ckpt = torch.load(ckpt_path,map_location=device)
-    ckpt['hyper_parameters'].pop('eval_downstream')
-    ckpt['hyper_parameters'].pop('air_temp_data_path')
-    ckpt['hyper_parameters'].pop('election_data_path')
-    lightning_model = SatCLIPLightningModule(**ckpt['hyper_parameters']).to(device)
+import numpy as np
+import torch
+from mlflow.models.signature import ModelSignature
+from mlflow.types.schema import Schema, TensorSpec
+from mlops.trainer import BasePythonModel, MLFlowLightningModule
 
-    lightning_model.load_state_dict(ckpt['state_dict'])
+from .main import SatCLIPLightningModule
+
+
+def get_satclip(ckpt_path, return_all=False):
+    ckpt = torch.load(ckpt_path, map_location="cpu")
+    ckpt["hyper_parameters"].pop("eval_downstream")
+    ckpt["hyper_parameters"].pop("air_temp_data_path")
+    ckpt["hyper_parameters"].pop("election_data_path")
+    lightning_model = SatCLIPLightningModule(**ckpt["hyper_parameters"])
+
+    lightning_model.load_state_dict(ckpt["state_dict"])
     lightning_model.eval()
 
     geo_model = lightning_model.model
@@ -16,3 +26,92 @@ def get_satclip(ckpt_path, device, return_all=False):
         return geo_model
     else:
         return geo_model.location
+
+
+class SatClipWrapper(BasePythonModel):
+    def load_context(self, context):
+        # Initialize the model with the stored parameters
+        self.state.pop("ckpt_path", None)
+
+        self.model = self.model_class(
+            ckpt_path=context.artifacts["checkpoint"],
+        )
+
+        self.model.eval()
+
+    def predict(self, context, model_input) -> np.ndarray:
+
+        # Input ============================================================================
+        # Extract patch, height, and width from the input dictionary
+        patch = model_input["patch"]  # Input Patch
+
+        # Make Prediction ==================================================================
+        # Make predictions with the model
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+
+            output = self.model.predict(patch)
+
+        return output
+
+    def get_signature(self, **kwargs):
+
+        # Define input schema (considering patch as an object and height, width as integers)
+        input_schema = Schema(
+            [
+                TensorSpec(
+                    np.dtype(np.uint8), (-1, 2), name="patch"
+                ),  # Dynamic H and W
+            ]
+        )
+
+        # Define output schema (assuming the output is a tensor or numerical value)
+        output_schema = Schema(
+            [TensorSpec(np.dtype(np.float32), (-1, 2), name="output")]
+        )  # You can adjust this based on your model output
+
+        # Create the signature
+        signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+
+        return signature
+
+    # satclip = load.get_satclip(ckpt_path=ckpt_path, device=device, return_all=False)
+    # satclip.eval()
+
+    # with torch.no_grad():
+    #     x = satclip(coordinate.double().to("cuda")).detach().cpu()
+
+
+class SatClipModel(MLFlowLightningModule):
+    def __init__(
+        self,
+        ckpt_path=None,
+    ):
+
+        super().__init__()
+        # Utility ==========================================================================
+        self.set_state(**locals())
+        self.name = "SatClip"
+        self.wrapper = SatClipWrapper
+
+        # Build Model ======================================================================
+        self.model = None
+        if ckpt_path is not None:
+            splits = ckpt_path.split("-")
+            emb_model = splits[0]
+            emb_size = splits[1].split(".")[0]
+
+            self.name = f"{self.name}.{emb_model}.{emb_size}"
+
+            self.model = get_satclip(
+                ckpt_path=ckpt_path,
+                return_all=False,
+            )
+
+        self.ckpt_path = ckpt_path
+
+    @torch.no_grad()
+    def predict(self, x: torch.Tensor):
+        x = self.model(x.double()).detach().cpu()
+
+        return x

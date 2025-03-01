@@ -3,12 +3,14 @@ from pathlib import Path
 
 import lightning.pytorch
 import torch
-from datamodules.s2geo_dataset import S2GeoDataModule
 from lightning.pytorch.cli import LightningCLI
-from loss import SatCLIPLoss
-from model import SatCLIP
 
-torch.set_float32_matmul_precision('high')
+from .datamodules.s2geo_dataset import S2GeoDataModule
+from .loss import SatCLIPLoss
+from .model import SatCLIP
+
+torch.set_float32_matmul_precision("high")
+
 
 class SatCLIPLightningModule(lightning.pytorch.LightningModule):
     def __init__(
@@ -152,10 +154,10 @@ def cli_main(default_config_filename="./configs/default.yaml"):
 if __name__ == "__main__":
     config_fn = "./configs/default.yaml"
 
-    #A100 go vroom vroom 🚗💨
-    if torch.cuda.get_device_name(device=0)=='NVIDIA A100 80GB PCIe':
+    # A100 go vroom vroom 🚗💨
+    if torch.cuda.get_device_name(device=0) == "NVIDIA A100 80GB PCIe":
         torch.backends.cuda.matmul.allow_tf32 = True
-        print('Superfastmode! 🚀')
+        print("Superfastmode! 🚀")
     else:
         torch.backends.cuda.matmul.allow_tf32 = False
     cli_main(config_fn)
