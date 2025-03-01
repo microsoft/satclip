@@ -98,8 +98,8 @@ class SatClipModel(MLFlowLightningModule):
         self.model = None
         if ckpt_path is not None:
             splits = ckpt_path.split("-")
-            emb_model = splits[0]
-            emb_size = splits[1].split(".")[0]
+            emb_model = splits[-2]
+            emb_size = splits[-1].split(".")[0]
 
             self.name = f"{self.name}.{emb_model}.{emb_size}"
 
