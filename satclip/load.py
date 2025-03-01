@@ -52,7 +52,7 @@ class SatClipWrapper(BasePythonModel):
 
             output = self.model.predict(patch)
 
-        return output
+        return output.numpy()
 
     def get_signature(self, **kwargs):
 
@@ -60,14 +60,14 @@ class SatClipWrapper(BasePythonModel):
         input_schema = Schema(
             [
                 TensorSpec(
-                    np.dtype(np.uint8), (-1, 2), name="patch"
+                    np.dtype(np.double), (-1, 2), name="patch"
                 ),  # Dynamic H and W
             ]
         )
 
         # Define output schema (assuming the output is a tensor or numerical value)
         output_schema = Schema(
-            [TensorSpec(np.dtype(np.float32), (-1, 2), name="output")]
+            [TensorSpec(np.dtype(np.double), (-1, 2), name="output")]
         )  # You can adjust this based on your model output
 
         # Create the signature
