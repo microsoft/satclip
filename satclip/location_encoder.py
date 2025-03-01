@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from einops import rearrange
 import numpy as np
 from datetime import datetime
-import positional_encoding as PE
+from . import positional_encoding as PE
 
 """
 FCNet
