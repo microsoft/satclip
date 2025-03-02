@@ -29,15 +29,6 @@ def get_satclip(ckpt_path, return_all=False):
 
 
 class SatClipWrapper(BasePythonModel):
-    def load_context(self, context):
-        # Initialize the model with the stored parameters
-        self.state.pop("ckpt_path", None)
-
-        self.model = self.model_class(
-            ckpt_path=context.artifacts["checkpoint"],
-        )
-
-        self.model.eval()
 
     def predict(self, context, model_input) -> np.ndarray:
 
@@ -84,8 +75,8 @@ class SatClipModel(MLFlowLightningModule):
     ):
 
         super().__init__()
+
         # Utility ==========================================================================
-        self.set_state(**locals())
         self.name = "SatClip"
         self.wrapper = SatClipWrapper
         self.signature = self.wrapper.get_signature()
