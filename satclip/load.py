@@ -32,7 +32,7 @@ def get_satclip(ckpt_path: str | None = None, return_all=False):
         return geo_model.location
 
 
-def get_mlflow_satclip(ckpt_path: str | None = None, return_all=False):
+def get_mlflow_satclip(ckpt_path: str | None = None):
     if ckpt_path is not None:
         ckpt = torch.load(ckpt_path, map_location="cpu")
         ckpt["hyper_parameters"].pop("eval_downstream")
@@ -44,14 +44,7 @@ def get_mlflow_satclip(ckpt_path: str | None = None, return_all=False):
         lightning_model.eval()
 
     else:
-        lightning_model = SatCLIPLightningModule()
-
-    backbone_model = lightning_model.backbone.model
-
-    if return_all:
-        lightning_model.backbone = backbone_model
-    else:
-        lightning_model.backbone = backbone_model.location
+        lightning_model = SatClipModel()
 
     return lightning_model
 
@@ -180,6 +173,6 @@ class SatClipModel(MLFlowLightningModule):
 
     @torch.no_grad()
     def predict(self, x: torch.Tensor):
-        x = self.backbone(x.double()).detach().cpu()
+        x = self.backbone.model.location(x.double()).detach().cpu()
 
         return x
