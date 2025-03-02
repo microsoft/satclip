@@ -54,7 +54,8 @@ class SatClipWrapper(BasePythonModel):
 
         return output.numpy()
 
-    def get_signature(self, **kwargs):
+    @staticmethod
+    def get_signature(**kwargs):
 
         # Define input schema (considering patch as an object and height, width as integers)
         input_schema = Schema(
@@ -75,12 +76,6 @@ class SatClipWrapper(BasePythonModel):
 
         return signature
 
-    # satclip = load.get_satclip(ckpt_path=ckpt_path, device=device, return_all=False)
-    # satclip.eval()
-
-    # with torch.no_grad():
-    #     x = satclip(coordinate.double().to("cuda")).detach().cpu()
-
 
 class SatClipModel(MLFlowLightningModule):
     def __init__(
@@ -93,6 +88,7 @@ class SatClipModel(MLFlowLightningModule):
         self.set_state(**locals())
         self.name = "SatClip"
         self.wrapper = SatClipWrapper
+        self.signature = self.wrapper.get_signature()
 
         # Build Model ======================================================================
         self.model = None
@@ -101,7 +97,7 @@ class SatClipModel(MLFlowLightningModule):
             emb_model = splits[-2]
             emb_size = splits[-1].split(".")[0]
 
-            self.name = f"{self.name}.{emb_model}.{emb_size}"
+            self.name = f"{self.name}.{emb_model.upper()}.{emb_size.upper()}"
 
             self.model = get_satclip(
                 ckpt_path=ckpt_path,
