@@ -46,12 +46,14 @@ def get_mlflow_satclip(ckpt_path: str | None = None, return_all=False):
     else:
         lightning_model = SatCLIPLightningModule()
 
-    geo_model = lightning_model.backbone.model
+    backbone_model = lightning_model.backbone.model
 
     if return_all:
-        return geo_model
+        lightning_model.backbone = backbone_model
     else:
-        return geo_model.location
+        lightning_model.backbone = backbone_model.location
+    
+    return 
 
 
 class SatClipWrapper(BasePythonModel):
