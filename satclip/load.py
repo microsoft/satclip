@@ -32,6 +32,28 @@ def get_satclip(ckpt_path: str | None = None, return_all=False):
         return geo_model.location
 
 
+def get_mlflow_satclip(ckpt_path: str | None = None, return_all=False):
+    if ckpt_path is not None:
+        ckpt = torch.load(ckpt_path, map_location="cpu")
+        ckpt["hyper_parameters"].pop("eval_downstream")
+        ckpt["hyper_parameters"].pop("air_temp_data_path")
+        ckpt["hyper_parameters"].pop("election_data_path")
+        lightning_model = SatClipModel(**ckpt["hyper_parameters"])
+
+        lightning_model.backbone.load_state_dict(ckpt["state_dict"])
+        lightning_model.eval()
+
+    else:
+        lightning_model = SatCLIPLightningModule()
+
+    geo_model = lightning_model.backbone.model
+
+    if return_all:
+        return geo_model
+    else:
+        return geo_model.location
+
+
 class SatClipWrapper(BasePythonModel):
 
     # def load_context(self, context):
@@ -85,10 +107,46 @@ class SatClipWrapper(BasePythonModel):
 class SatClipModel(MLFlowLightningModule):
     def __init__(
         self,
-        ckpt_path: str | None = None,
+        embed_dim=512,
+        image_resolution=256,
+        vision_layers=12,
+        vision_width=768,
+        vision_patch_size=32,
+        in_channels=4,
+        le_type="grid",
+        pe_type="siren",
+        frequency_num=16,
+        max_radius=260,
+        min_radius=1,
+        legendre_polys=16,
+        harmonics_calculation="analytic",
+        sh_embedding_dims=32,
+        learning_rate=1e-4,
+        weight_decay=0.01,
+        num_hidden_layers=2,
+        capacity=256,
     ):
 
-        super().__init__()
+        super().__init__(
+            embed_dim=embed_dim,
+            image_resolution=image_resolution,
+            vision_layers=vision_layers,
+            vision_width=vision_width,
+            vision_patch_size=vision_patch_size,
+            in_channels=in_channels,
+            le_type=le_type,
+            pe_type=pe_type,
+            frequency_num=frequency_num,
+            max_radius=max_radius,
+            min_radius=min_radius,
+            legendre_polys=legendre_polys,
+            harmonics_calculation=harmonics_calculation,
+            sh_embedding_dims=sh_embedding_dims,
+            learning_rate=learning_rate,
+            weight_decay=weight_decay,
+            num_hidden_layers=num_hidden_layers,
+            capacity=capacity,
+        )
 
         # Utility ==========================================================================
         self.name = "SatClip"
@@ -96,15 +154,30 @@ class SatClipModel(MLFlowLightningModule):
         self.signature = self.wrapper.get_signature()
 
         # Build Model ======================================================================
-        self.model = get_satclip(
-            ckpt_path=ckpt_path,
-            return_all=False,
-        )
 
-        self.ckpt_path = ckpt_path
+        self.backbone = SatCLIPLightningModule(
+            embed_dim=embed_dim,
+            image_resolution=image_resolution,
+            vision_layers=vision_layers,
+            vision_width=vision_width,
+            vision_patch_size=vision_patch_size,
+            in_channels=in_channels,
+            le_type=le_type,
+            pe_type=pe_type,
+            frequency_num=frequency_num,
+            max_radius=max_radius,
+            min_radius=min_radius,
+            legendre_polys=legendre_polys,
+            harmonics_calculation=harmonics_calculation,
+            sh_embedding_dims=sh_embedding_dims,
+            learning_rate=learning_rate,
+            weight_decay=weight_decay,
+            num_hidden_layers=num_hidden_layers,
+            capacity=capacity,
+        )
 
     @torch.no_grad()
     def predict(self, x: torch.Tensor):
-        x = self.model(x.double()).detach().cpu()
+        x = self.backbone(x.double()).detach().cpu()
 
         return x
