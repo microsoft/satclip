@@ -10,15 +10,19 @@ from mlops.trainer import BasePythonModel, MLFlowLightningModule
 from .main import SatCLIPLightningModule
 
 
-def get_satclip(ckpt_path, return_all=False):
-    ckpt = torch.load(ckpt_path, map_location="cpu")
-    ckpt["hyper_parameters"].pop("eval_downstream")
-    ckpt["hyper_parameters"].pop("air_temp_data_path")
-    ckpt["hyper_parameters"].pop("election_data_path")
-    lightning_model = SatCLIPLightningModule(**ckpt["hyper_parameters"])
+def get_satclip(ckpt_path: str | None = None, return_all=False):
+    if ckpt_path is not None:
+        ckpt = torch.load(ckpt_path, map_location="cpu")
+        ckpt["hyper_parameters"].pop("eval_downstream")
+        ckpt["hyper_parameters"].pop("air_temp_data_path")
+        ckpt["hyper_parameters"].pop("election_data_path")
+        lightning_model = SatCLIPLightningModule(**ckpt["hyper_parameters"])
 
-    lightning_model.load_state_dict(ckpt["state_dict"])
-    lightning_model.eval()
+        lightning_model.load_state_dict(ckpt["state_dict"])
+        lightning_model.eval()
+
+    else:
+        lightning_model = SatCLIPLightningModule()
 
     geo_model = lightning_model.model
 
@@ -29,6 +33,16 @@ def get_satclip(ckpt_path, return_all=False):
 
 
 class SatClipWrapper(BasePythonModel):
+
+    # def load_context(self, context):
+    #     """
+    #     Load the model.
+    #     """
+    #     # Initialize the model with the stored parameters
+    #     # self.model = self.model_class(**self.init_params)
+    #     self.model = self.model(ckpt_path=context.artifacts["checkpoint"])
+
+    #     self.model.eval()
 
     def predict(self, context, model_input) -> np.ndarray:
 
@@ -71,7 +85,7 @@ class SatClipWrapper(BasePythonModel):
 class SatClipModel(MLFlowLightningModule):
     def __init__(
         self,
-        ckpt_path=None,
+        ckpt_path: str | None = None,
     ):
 
         super().__init__()
@@ -82,18 +96,10 @@ class SatClipModel(MLFlowLightningModule):
         self.signature = self.wrapper.get_signature()
 
         # Build Model ======================================================================
-        self.model = None
-        if ckpt_path is not None:
-            splits = ckpt_path.split("-")
-            emb_model = splits[-2]
-            emb_size = splits[-1].split(".")[0]
-
-            self.name = f"{self.name}.{emb_model.upper()}.{emb_size.upper()}"
-
-            self.model = get_satclip(
-                ckpt_path=ckpt_path,
-                return_all=False,
-            )
+        self.model = get_satclip(
+            ckpt_path=ckpt_path,
+            return_all=False,
+        )
 
         self.ckpt_path = ckpt_path
 
