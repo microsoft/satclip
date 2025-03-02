@@ -52,8 +52,8 @@ def get_mlflow_satclip(ckpt_path: str | None = None, return_all=False):
         lightning_model.backbone = backbone_model
     else:
         lightning_model.backbone = backbone_model.location
-    
-    return 
+
+    return lightning_model
 
 
 class SatClipWrapper(BasePythonModel):
