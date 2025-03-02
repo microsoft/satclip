@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="satclip",
-    version="0.0.1",
+    version="1.0.0",
     # install_requires=REQUIREMENTS,
     packages=["satclip"],
     package_dir={
