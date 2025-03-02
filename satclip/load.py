@@ -34,7 +34,7 @@ class SatClipWrapper(BasePythonModel):
 
         # Input ============================================================================
         # Extract patch, height, and width from the input dictionary
-        patch = model_input["patch"]  # Input Patch
+        patch = torch.tensor(model_input["patch"])  # Assuming this is a torch.Tensor
 
         # Make Prediction ==================================================================
         # Make predictions with the model
