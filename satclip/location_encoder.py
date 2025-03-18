@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from einops import rearrange
 from torch import nn, optim
 
-from satclip import positional_encoding as PE
+import satclip.positional_encoding as PE
 
 """
 FCNet
@@ -127,9 +127,7 @@ class SirenNet(nn.Module):
                 )
             )
 
-        final_activation = (
-            nn.Identity() if not exists(final_activation) else final_activation
-        )
+        final_activation = nn.Identity() if not exists(final_activation) else final_activation
         self.last_layer = Siren(
             dim_in=dim_hidden,
             dim_out=dim_out,
@@ -242,9 +240,7 @@ class SirenWrapper(nn.Module):
 
         self.modulator = None
         if exists(latent_dim):
-            self.modulator = Modulator(
-                dim_in=latent_dim, dim_hidden=net.dim_hidden, num_layers=net.num_layers
-            )
+            self.modulator = Modulator(dim_in=latent_dim, dim_hidden=net.dim_hidden, num_layers=net.num_layers)
 
         tensors = [
             torch.linspace(-1, 1, steps=image_height),
@@ -256,17 +252,13 @@ class SirenWrapper(nn.Module):
 
     def forward(self, img=None, *, latent=None):
         modulate = exists(self.modulator)
-        assert not (
-            modulate ^ exists(latent)
-        ), "latent vector must be only supplied if `latent_dim` was passed in on instantiation"
+        assert not (modulate ^ exists(latent)), "latent vector must be only supplied if `latent_dim` was passed in on instantiation"
 
         mods = self.modulator(latent) if modulate else None
 
         coords = self.grid.clone().detach().requires_grad_()
         out = self.net(coords, mods)
-        out = rearrange(
-            out, "(h w) c -> () c h w", h=self.image_height, w=self.image_width
-        )
+        out = rearrange(out, "(h w) c -> () c h w", h=self.image_height, w=self.image_width)
 
         if exists(img):
             return F.mse_loss(img, out)
@@ -295,9 +287,7 @@ def get_positional_encoding(
                 harmonics_calculation=harmonics_calculation,
             )
     elif name == "theory":
-        return PE.Theory(
-            min_radius=min_radius, max_radius=max_radius, frequency_num=frequency_num
-        )
+        return PE.Theory(min_radius=min_radius, max_radius=max_radius, frequency_num=frequency_num)
     elif name == "wrap":
         return PE.Wrap()
     elif name in ["grid", "spherec", "spherecplus", "spherem", "spheremplus"]:
@@ -329,9 +319,7 @@ def get_neural_network(name, input_dim, num_classes=256, dim_hidden=256, num_lay
             dim_out=num_classes,
         )
     elif name == "fcnet":
-        return FCNet(
-            num_inputs=input_dim, num_classes=num_classes, dim_hidden=dim_hidden
-        )
+        return FCNet(num_inputs=input_dim, num_classes=num_classes, dim_hidden=dim_hidden)
     else:
         raise ValueError(f"{name} not a known neural networks.")
 
