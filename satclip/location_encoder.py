@@ -7,8 +7,6 @@ import torch.nn.functional as F
 from einops import rearrange
 from torch import nn, optim
 
-import satclip.positional_encoding as PE
-
 """
 FCNet
 """
@@ -274,6 +272,9 @@ def get_positional_encoding(
     max_radius=360,
     frequency_num=10,
 ):
+    # Move the import statement inside the function
+    from . import positional_encoding as PE
+
     if name == "direct":
         return PE.Direct()
     elif name == "cartesian3d":
