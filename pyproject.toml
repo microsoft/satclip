@@ -10,7 +10,7 @@ target-version = ['py39']
 skip-string-normalization = true
 
 [tool.bumpver]
-current_version = "2025.3.0"
+current_version = "2025.3.1"
 version_pattern = "MAJOR.MINOR.PATCH"
 version_regex = "(?P<year>[0-9]{4})\\.(?P<month>[0-9]{1,2})\\.(?P<patch>[0-9]+)"
 version_replacement = "{year}.{month}.{patch}"
