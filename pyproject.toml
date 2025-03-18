@@ -26,9 +26,6 @@ push = true
 "setup.py" = [
     "{version}",
 ]
-"README.md" = [
-    "{version}",
-]
 "satclip/__init__.py" = [
     "{version}",
 ]
