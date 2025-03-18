@@ -1,0 +1,71 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Version Increment
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set GIT Config
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)"
+          git config -l
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install flake8 pytest bumpver
+          # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude resources
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=20 --max-line-length=140 --statistics --exclude resources
+      - name: Increase Version
+        run: |
+          # Extract the current version from bumpver.toml
+          CURRENT_VERSION=$(grep 'current_version' .bumpver.toml | awk -F'"' '{print $2}')
+
+          # Extract year, month, and patch
+          CURRENT_YEAR=$(echo "$CURRENT_VERSION" | cut -d'.' -f1)
+          CURRENT_MONTH=$(echo "$CURRENT_VERSION" | cut -d'.' -f2)
+          CURRENT_PATCH=$(echo "$CURRENT_VERSION" | cut -d'.' -f3)
+
+          # Get system date
+          SYSTEM_YEAR=$(date +"%Y")
+          SYSTEM_MONTH=$(date +"%-m")  # Removes leading zero (e.g., "03" -> "3")
+
+          echo "Current Version: $CURRENT_VERSION"
+          echo "Current Year: $CURRENT_YEAR, Current Month: $CURRENT_MONTH, Current Patch: $CURRENT_PATCH"
+          echo "System Year: $SYSTEM_YEAR, System Month: $SYSTEM_MONTH"
+
+          # Check if we need to reset the version
+          if [ "$SYSTEM_YEAR" -gt "$CURRENT_YEAR" ] || [ "$SYSTEM_MONTH" -gt "$CURRENT_MONTH" ]; then
+              # New Year or New Month detected, reset to YYYY.MM.0
+              echo "Updating version to new month/year..."
+              bumpver update --set-version "$SYSTEM_YEAR.$SYSTEM_MONTH.0"
+          else
+              # Patch increment
+              echo "Updating patch version..."
+              bumpver update -p
+          fi

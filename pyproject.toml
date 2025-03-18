@@ -1,0 +1,41 @@
+[build-system]
+requires = [
+    "setuptools>=30.3.0",
+    "wheel",
+]
+
+[tool.black]
+line-length = 140
+target-version = ['py39']
+skip-string-normalization = true
+
+[tool.bumpver]
+current_version = "2025.3.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+version_regex = "(?P<year>[0-9]{4})\\.(?P<month>[0-9]{1,2})\\.(?P<patch>[0-9]+)"
+version_replacement = "{year}.{month}.{patch}"
+commit_message = "ver(satclip): bump version from {old_version} -> {new_version}"
+commit = true
+tag = true
+push = true
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+]
+"setup.py" = [
+    "{version}",
+]
+"README.md" = [
+    "{version}",
+]
+"satclip/__init__.py" = [
+    "{version}",
+]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 120
+profile = "black"
