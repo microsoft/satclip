@@ -3,7 +3,7 @@ from torch import nn
 import numpy as np
 import math
 
-from .common import _cal_freq_list
+from satclip.positional_encoding.common import _cal_freq_list
 
 """
 Grid, SphereC, SphereCPlus, SphereM, SphereMPlus location encoders

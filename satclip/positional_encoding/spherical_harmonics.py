@@ -1,7 +1,7 @@
 import torch
 from torch import nn
-from .spherical_harmonics_ylm import SH as SH_analytic
-from .spherical_harmonics_closed_form import SH as SH_closed_form
+from satclip.positional_encoding.spherical_harmonics_ylm import SH as SH_analytic
+from satclip.positional_encoding.spherical_harmonics_closed_form import SH as SH_closed_form
 
 """
 Spherical Harmonics locaiton encoder

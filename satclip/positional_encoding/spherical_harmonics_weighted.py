@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from .spherical_harmonics_ylm import SH
+from satclip.positional_encoding.spherical_harmonics_ylm import SH
 from datetime import datetime
 
 def SH_(args):

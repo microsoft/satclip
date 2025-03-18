@@ -5,9 +5,9 @@ import lightning.pytorch
 import torch
 from lightning.pytorch.cli import LightningCLI
 
-from .datamodules.s2geo_dataset import S2GeoDataModule
-from .loss import SatCLIPLoss
-from .model import SatCLIP
+from satclip.datamodules.s2geo_dataset import S2GeoDataModule
+from satclip.loss import SatCLIPLoss
+from satclip.model import SatCLIP
 
 torch.set_float32_matmul_precision("high")
 

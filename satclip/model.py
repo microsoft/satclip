@@ -1,17 +1,14 @@
-import math
 from collections import OrderedDict
-from typing import Optional, Tuple, Union
+from typing import Tuple, Union
 
 import numpy as np
 import timm
 import torch
 import torch.nn.functional as F
-import torchgeo.models
 from torch import nn
 from torchgeo.models import ResNet18_Weights, ResNet50_Weights, ViTSmall16_Weights
 
-from .datamodules.s2geo_dataset import S2Geo
-from .location_encoder import (
+from satclip.location_encoder import (
     LocationEncoder,
     get_neural_network,
     get_positional_encoding,

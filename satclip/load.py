@@ -7,7 +7,7 @@ from mlflow.models.signature import ModelSignature
 from mlflow.types.schema import Schema, TensorSpec
 from mlops.trainer import BasePythonModel, MLFlowLightningModule
 
-from .main import SatCLIPLightningModule
+from satclip.main import SatCLIPLightningModule
 
 
 def get_satclip(ckpt_path: str | None = None, return_all=False):
