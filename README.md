@@ -32,16 +32,14 @@ with torch.no_grad():
 
 ## Training
 
-You first need to download the *S2-100k* dataset in `/data/s2`. First, download the index file:
-```bash
-cd data/s2
-wget https://satclip.z13.web.core.windows.net/satclip/index.csv
+You first need to download the *S2-100k* dataset. This can be done directly via [Hugging Face](https://huggingface.co/datasets/davanstrien/satclip), using the `huggingface_hub` library:
+```python
+from huggingface_hub import snapshot_download
+snapshot_download("davanstrien/satclip", local_dir='.', repo_type='dataset')
 ```
-Within `/data/s2`, navigate to `/images`, download all images and unpack them:
+Alternatively you can clone the repository:
 ```bash
-cd images
-wget https://satclip.z13.web.core.windows.net/satclip/satclip.tar
-tar -xf satclip.tar
+git clone https://huggingface.co/datasets/davanstrien/satclip
 ```
 
 Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running:
@@ -60,29 +58,26 @@ The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images samp
 
 *Visualization of embeddings obtained by different location encoders for locations around the globe.*
 
-We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded as follows:
-* SatCLIP-ResNet18-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l10.ckpt`
-* SatCLIP-ResNet18-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l40.ckpt`
-* SatCLIP-ResNet50-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet50-l10.ckpt`
-* SatCLIP-ResNet50-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet50-l40.ckpt`
-* SatCLIP-ViT16-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-vit16-l10.ckpt`
-* SatCLIP-ViT16-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-vit16-l40.ckpt`
+We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded directly via [Hugging Face](https://huggingface.co/models?other=arxiv:2311.17179):
 
-Usage of pretrained models is simple:
+Usage of pretrained models is simple. Simply specify the SatCLIP model you want to access, e.g. `satclip-vit16-l40`:
 ```python
+from huggingface_hub import hf_hub_download
 from load import get_satclip
+import torch
 
-device = 'cuda'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-c = torch.randn(32, 2) # Represents a batch of 32 locations (lon/lat)
+c = torch.randn(32, 2)  # Represents a batch of 32 locations (lon/lat)
 
-model = get_satclip('path_to_satclip', device=device) #Only loads location encoder by default
+model = get_satclip(
+    hf_hub_download("microsoft/SatCLIP-ViT16-L40", "satclip-vit16-l40.ckpt"),
+    device=device,
+)  # Only loads location encoder by default
 model.eval()
 with torch.no_grad():
-  emb  = model(c.double().to(device)).detach().cpu()
+    emb = model(c.double().to(device)).detach().cpu()
 ```
-
-You can also access SatCLIP model weights directly via [Hugging Face](https://huggingface.co/microsoft?search_models=satclip).
 
 ## Examples
 
