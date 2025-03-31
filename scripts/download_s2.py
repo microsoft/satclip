@@ -87,7 +87,7 @@ def main(args):
     Main processing function for downloading Sentinel-2 image patches from a STAC catalog
     and uploading them to an Azure Blob container as Cloud-Optimized GeoTIFFs (COGs).
 
-    The function randomly valid image patches from the input GeoParquet file,
+    The function selects valid image patches from the input GeoParquet file,
     extracts a 256x256 region from a Sentinel-2 STAC item, filters based on NaN content,
     and embeds relevant metadata before uploading the patch to Azure Blob Storage.
 
