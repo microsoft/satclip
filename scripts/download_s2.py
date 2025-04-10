@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import planetary_computer
 import pystac_client
+import rioxarray  # rioxarray is required for the .rio methods in xarray despite what mypy, ruff, etc. says :)
 import stackstac
 from tqdm import tqdm
 
@@ -182,12 +183,13 @@ def main(args):
 
         # Filter patches with more than 10% missing data
         percent_empty = np.mean((np.isnan(patch.data)).sum(axis=0) == num_channels)
+        percent_zero = np.mean((patch.data == 0).sum(axis=0) == num_channels)
 
-        if percent_empty > 0.1:
+        if percent_empty > 0.1 or percent_zero > 0.1:
             num_empty_hits += 1
             continue
 
-        # Save valid patch to Azure Blob Storage as COG with metadata
+        # Save valid patch to Azure Blob Storage as GeoTIFF with metadata
         with io.BytesIO() as buffer:
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
@@ -216,10 +218,14 @@ def main(args):
             # Write Cloud-Optimized GeoTIFF to memory
             patch.rio.to_raster(
                 buffer,
-                driver="COG",
+                driver="GTiff",
                 dtype=np.uint16,
                 compress="LZW",
                 predictor=2,
+                tiled=True,
+                blockxsize=256,
+                blockysize=256,
+                interleave="pixel",
             )
 
             # Upload patch to Azure Blob
