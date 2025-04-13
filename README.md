@@ -99,11 +99,16 @@ Examples on how to obtain and use pretrained SatCLIP embeddings can be found in 
 ## Citation
 
 ```bibtex
-@article{klemmer2023satclip,
-  title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
-  author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Ru{\ss}wurm, Marc},
-  journal={arXiv preprint arXiv:2311.17179},
-  year={2023}
+@article{klemmer2025satclip,
+    title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
+    volume={39},
+    url={https://ojs.aaai.org/index.php/AAAI/article/view/32457}, DOI={10.1609/aaai.v39i4.32457},
+    number={4},
+    journal={Proceedings of the AAAI Conference on Artificial Intelligence},
+    author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Rußwurm, Marc},
+    year={2025},
+    month={Apr.},
+    pages={4347-4355}
 }
 ```
 
