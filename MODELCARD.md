@@ -15,7 +15,7 @@ SatCLIP is a model for contrastive pretraining of satellite image-location pairs
 ### Model Sources 
 
 - **Repository:** [github.com/microsoft/satclip](https://github.com/microsoft/satclip)
-- **Paper:** TBA
+- **Paper:** [https://ojs.aaai.org/index.php/AAAI/article/view/32457](https://ojs.aaai.org/index.php/AAAI/article/view/32457)
 
 ## Uses
 
@@ -71,14 +71,19 @@ SatCLIP can be evaluated throughout training and during downstream deployment. D
 
 **BibTeX:**
 ```bibtex
-@article{klemmer2023satclip,
-  title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
-  author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Russwurm, Marc},
-  journal={TBA},
-  year={2023}
+@article{klemmer2025satclip,
+    title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
+    volume={39},
+    url={https://ojs.aaai.org/index.php/AAAI/article/view/32457}, DOI={10.1609/aaai.v39i4.32457},
+    number={4},
+    journal={Proceedings of the AAAI Conference on Artificial Intelligence},
+    author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Rußwurm, Marc},
+    year={2025},
+    month={Apr.},
+    pages={4347-4355}
 }
 ```
 
 ## Model Card Contact
 
-For feedback and comments, contact [kklemmer@microsoft.com](mailto:kklemmer@microsoft.com).
+For feedback and comments, contact [koklemmer@microsoft.com](mailto:koklemmer@microsoft.com).
