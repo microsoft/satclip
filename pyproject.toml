@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satclip"
+description = "A global, general-purpose geographic location encoder"
+version = "0.0.1"
+authors = [
+  {name="Konstantin Klemmer"},
+  {name="Esther Rolf"},
+  {name="Caleb Robinson"},
+  {name="Lester Mackey"},
+  {name="Marc Rußwurm"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+]
+
+dependencies = [
+    "albumentations",
+    "lightning == 2.2.2",
+    "pandas",
+    "rasterio >= 1.3.10",
+    "torchgeo >= 0.5",  # Forces Python 3.9+
+]
+
+[project.urls]
+Homepage = "https://github.com/microsoft/satclip"
+Repository = "https://github.com/microsoft/satclip.git"
+Issues = "https://github.com/microsoft/satclip/issues"
+
+[tool.setuptools.packages.find]
+include = ["satclip", "satclip.*"]
