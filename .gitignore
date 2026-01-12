@@ -1,0 +1,7 @@
+# Data files
+dataverse_files.zip
+hamza/gpw_data/
+
+# OS files
+.DS_Store
+*/.DS_Store
