@@ -304,18 +304,22 @@ Visualization shows:
 
 ### Notebook 19: Simplicity Bias Tests ⭐⭐⭐ CRITICAL
 **Priority**: 1 (HIGHEST - Finding "alpha")
-**Status**: ✅ Ready to Execute
-**Estimated Duration**: ~5-6 hours
-**Documentation**: [NOTEBOOK19_SIMPLICITY_BIAS_TESTS.md](NOTEBOOK19_SIMPLICITY_BIAS_TESTS.md)
-**Notebook File**: [19_simplicity_bias_tests.ipynb](19_simplicity_bias_tests.ipynb)
-**Data Sources**: ✅ All validated ([NB19_DATA_VALIDATION_SUMMARY.md](NB19_DATA_VALIDATION_SUMMARY.md))
+**Status**: 🔄 **Partially Complete** (2/5 experiments)
+**Estimated Duration**: ~5-6 hours total (~2 hours remaining)
+**Documentation**:
+- [NOTEBOOK19_SIMPLICITY_BIAS_TESTS.md](NOTEBOOK19_SIMPLICITY_BIAS_TESTS.md) - Experimental design
+- [ANALYSIS_NOTEBOOK19.md](ANALYSIS_NOTEBOOK19.md) - **Results & Analysis** ⭐
+**Notebook Files**:
+- [19_simplicity_bias_tests.ipynb](19_simplicity_bias_tests.ipynb) - Main (Exp 2✅, 3✅)
+- [19b_supplementary_experiments.ipynb](19b_supplementary_experiments.ipynb) - **Supplementary** (Exp 1, 4, 5)
+**Data Sources**: ✅ Elevation validated, ❌ Population path issue (fixable)
 
 #### Goal
 **Find "alpha"** - identify tasks/setups where learned activations excel over ReLU + SH
 
 Based on Teney et al. (2024) "Do We Always Need the Simplicity Bias?" (CVPR), test key hypotheses about when simplicity bias is detrimental.
 
-#### Planned Experiments
+#### Completed Experiments
 
 **1. Regression vs Classification ⭐⭐⭐**
 - Test SAME data (population density) with different loss functions
@@ -344,6 +348,29 @@ Based on Teney et al. (2024) "Do We Always Need the Simplicity Bias?" (CVPR), te
 **5. Task Difficulty Scaling ⭐**
 - Vary difficulty: smoothed elevation → raw elevation → gradient magnitude
 - **Hypothesis**: Harder tasks need expressive activations
+
+#### Actual Results (2026-01-12)
+
+**Completed**:
+- ✅ **Exp 2 (Elevation)**: Spline wins by **+0.36%** (0.9030 vs 0.8997)
+  - Much smaller than expected from paper
+  - Training 47% slower
+- ✅ **Exp 3 (Multi-resolution)**: **Hypothesis FAILED**
+  - Coarse: Tie (-0.02%)
+  - Medium: Small spline advantage (+0.24%)
+  - Fine: **ReLU wins** (+0.47%) ❌ Opposite of prediction!
+
+**Failed/Incomplete**:
+- ❌ **Exp 1 (Regression vs Classification)**: Population data path issue
+- ❌ **Exp 4 (Complexity)**: Dependency on Exp 1
+- ❓ **Exp 5 (Difficulty)**: Status unclear
+
+**Key Finding**: **No clear "alpha" found yet**
+- Spline advantage minimal (+0.36%) or negative (-0.47% at fine resolution)
+- Multi-resolution hypothesis rejected (ReLU won at fine scale)
+- Critical regression test still needed (Exp 1)
+
+See [ANALYSIS_NOTEBOOK19.md](ANALYSIS_NOTEBOOK19.md) for detailed analysis.
 
 #### Key Questions
 1. **When do learned activations beat ReLU?**
