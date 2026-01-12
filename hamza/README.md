@@ -204,10 +204,10 @@ See **[EXPERIMENTAL_DESIGN_V2.md](EXPERIMENTAL_DESIGN_V2.md)** for full details.
 
 | Priority | Notebook | Focus | Goal |
 |----------|----------|-------|------|
-| 1 | **21** | Visualization | What are splines learning? |
-| 2 | **22** | Robustness | Multiple seeds, error bars |
-| 3 | **20** | High-frequency tasks | Elevation, temperature, edges |
-| 4 | **19** | Architecture interaction | Depth/width sweeps |
+| 1 | **19** | **Simplicity bias tests** | **Find "alpha" - where learned acts excel** |
+| 2 | **20** | Complexity analysis + visualization | What are splines learning? |
+| 3 | **21** | Robustness | Multiple seeds, error bars |
+| 4 | **22** | Architecture interaction | Depth/width sweeps |
 | 5 | **23** | Raw + Learned | Complete the story |
 
 ---

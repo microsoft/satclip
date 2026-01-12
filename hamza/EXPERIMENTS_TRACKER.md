@@ -11,9 +11,9 @@ This is a living document tracking all experiments: completed, in progress, and 
 
 **Phase**: 1 Complete ✅ | 2 In Progress 🔄
 
-**Current Focus**: Notebook 18 - Spline Deep Dive
+**Current Focus**: Notebook 19 - Simplicity Bias Tests (Ready to Execute)
 
-**Next Action**: Execute Notebook 18 on Colab
+**Next Action**: Execute Notebook 19 on Colab (~5-6 hours)
 
 ---
 
@@ -302,8 +302,115 @@ Visualization shows:
 
 ## 📅 Pending Experiments (Phase 2)
 
-### Notebook 19: Architecture Interaction
-**Priority**: 5 (Medium-low)
+### Notebook 19: Simplicity Bias Tests ⭐⭐⭐ CRITICAL
+**Priority**: 1 (HIGHEST - Finding "alpha")
+**Status**: ✅ Ready to Execute
+**Estimated Duration**: ~5-6 hours
+**Documentation**: [NOTEBOOK19_SIMPLICITY_BIAS_TESTS.md](NOTEBOOK19_SIMPLICITY_BIAS_TESTS.md)
+**Notebook File**: [19_simplicity_bias_tests.ipynb](19_simplicity_bias_tests.ipynb)
+**Data Sources**: ✅ All validated ([NB19_DATA_VALIDATION_SUMMARY.md](NB19_DATA_VALIDATION_SUMMARY.md))
+
+#### Goal
+**Find "alpha"** - identify tasks/setups where learned activations excel over ReLU + SH
+
+Based on Teney et al. (2024) "Do We Always Need the Simplicity Bias?" (CVPR), test key hypotheses about when simplicity bias is detrimental.
+
+#### Planned Experiments
+
+**1. Regression vs Classification ⭐⭐⭐**
+- Test SAME data (population density) with different loss functions
+- Classification: CrossEntropy (current approach)
+- Regression: MSE loss on continuous values
+- **Paper predicts**: Learned activations excel on regression
+
+**2. High-Frequency Geographic Tasks ⭐⭐⭐**
+- Population (smooth) → ReLU wins [baseline]
+- **Elevation** (sharp peaks, valleys) → **Spline should win**
+- **Coastline distance** (step functions) → **Spline should win**
+- Temperature gradients (medium frequency) → Spline ≥ ReLU
+
+**3. Multi-Resolution Analysis ⭐⭐**
+- Test elevation at multiple spatial resolutions:
+  - Coarse (1°): ~10K samples
+  - Medium (0.5°): ~40K samples
+  - Fine (0.25°): ~160K samples
+- **Hypothesis**: Finer resolution → more high-frequency → Spline advantage
+
+**4. Function Complexity Measurement ⭐⭐**
+- Implement Total Variation (TV) metric from paper
+- Measure complexity of learned functions
+- **Test**: Does complexity correlate with performance? (yes for regression, no for classification)
+
+**5. Task Difficulty Scaling ⭐**
+- Vary difficulty: smoothed elevation → raw elevation → gradient magnitude
+- **Hypothesis**: Harder tasks need expressive activations
+
+#### Key Questions
+1. **When do learned activations beat ReLU?**
+   - Regression vs classification?
+   - High-frequency vs low-frequency tasks?
+   - Fine vs coarse resolution?
+
+2. **What's the magnitude of improvement?**
+   - Small (<1%) on smooth tasks?
+   - Large (>5%) on high-frequency tasks?
+
+3. **Does complexity correlate with performance?**
+   - As paper predicts for regression tasks?
+
+#### Expected Outcomes
+- ✅ Spline > ReLU on **regression formulation**
+- ✅ Spline > ReLU on **elevation** (high-frequency)
+- ✅ Spline > ReLU on **fine resolution**
+- ✅ Complexity (TV) correlates with regression performance
+- ❌ ReLU ≈ Spline on classification (simplicity bias adequate)
+
+#### Why This Matters
+- **Actionable guidelines**: When to use learned activations
+- **Validates paper findings**: On geographic data
+- **Identifies "alpha"**: Real advantages over ReLU
+- **Publication-ready**: "Learned activations for high-frequency geographic regression"
+
+---
+
+### Notebook 20: Complexity Analysis + Visualization
+**Priority**: 2 (High)
+**Status**: Not yet created
+**Estimated Duration**: ~2 hours
+
+#### Goal
+Understand what learned activations are learning and why they work.
+
+#### Planned Experiments
+1. **Activation shape visualization**: Plot learned spline functions
+2. **Layer-wise analysis**: Different layers learn different shapes?
+3. **Complexity landscapes**: Visualize TV in parameter space
+4. **Task-specific shapes**: Do elevation splines differ from population splines?
+
+#### Builds On
+- Notebook 19 results (which tasks benefit)
+- Notebook 18 (optimal spline configuration)
+
+---
+
+### Notebook 21: Robustness & Statistical Validation
+**Priority**: 3 (High)
+**Status**: Not yet created
+**Estimated Duration**: ~3 hours
+
+#### Goal
+Validate findings with multiple seeds, error bars, statistical tests.
+
+#### Planned Experiments
+1. **Multiple seeds**: 5 runs for key configs
+2. **Different spatial blocking**: 2.5°, 5°, 10° grid sizes
+3. **Different train/test ratios**: 50%, 70%, 90%
+4. **Statistical significance**: t-tests for Spline vs ReLU
+
+---
+
+### Notebook 22: Architecture Interaction
+**Priority**: 4 (Medium)
 **Status**: Not yet created
 **Estimated Duration**: ~4 hours
 
@@ -313,32 +420,13 @@ Understand how learned activations interact with network architecture (depth/wid
 #### Planned Experiments
 1. **Depth sweep**: 2, 3, 4, 5, 8 layers
 2. **Width sweep**: 128, 256, 384, 512 hidden units
-3. **Depth-width trade-offs**: 8×128 vs 4×256 vs 2×512
-4. **Activation by layer**: Learned in early layers only, late layers only, or all layers
+3. **Depth-width trade-offs**: Match parameter count, vary architecture
+4. **Activation by layer**: Early layers only vs late layers only
 
 #### Key Questions
-- Do deeper networks need learned activations less?
+- Do deeper networks benefit more from learned activations?
 - Is there an optimal architecture for each activation type?
-- Can we achieve same performance with fewer parameters + better activation?
-
----
-
-### Notebook 20: High-Frequency Tasks
-**Priority**: 4 (Medium)
-**Status**: Not yet created
-**Estimated Duration**: ~3 hours
-
-#### Goal
-Test whether learned activations help more on high-frequency tasks.
-
-#### Planned Tasks
-1. **Elevation** (ETOPO1 or similar) - sharp peaks, valleys
-2. **Temperature anomalies** - sharp fronts
-3. **Urban/rural boundaries** - discrete transitions
-4. **Multi-task learning** - predict multiple targets jointly
-
-#### Hypothesis
-Population density is too smooth/low-frequency. High-frequency tasks might favor learned activations more.
+- Can we save parameters with better activations?
 
 ---
 
