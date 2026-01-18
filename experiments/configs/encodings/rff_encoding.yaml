@@ -1,0 +1,9 @@
+# RFF coordinate encoding
+# Random Fourier Features for coordinates
+
+model:
+  encoding:
+    type: "rff"
+    n_features: 256
+    sigma: 10.0
+    normalize_input: true

@@ -1,0 +1,17 @@
+# Elevation prediction experiment
+# Tests on ETOPO global elevation data
+
+experiment:
+  name: "elevation"
+  description: "Global elevation prediction from coordinates"
+
+data:
+  task: "regression"
+  dataset: "elevation"
+  n_samples: 15000
+  test_fraction: 0.3
+  region: null  # null for global, or [lon_min, lon_max, lat_min, lat_max]
+
+training:
+  max_epochs: 100
+  learning_rate: 0.001

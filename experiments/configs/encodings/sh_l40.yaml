@@ -1,0 +1,9 @@
+# Spherical Harmonics L=40 encoding
+# High resolution - 1600 dimensions
+# Note: May need larger network to utilize
+
+model:
+  encoding:
+    type: "spherical_harmonics"
+    legendre_polys: 40
+    harmonics_calculation: "analytic"

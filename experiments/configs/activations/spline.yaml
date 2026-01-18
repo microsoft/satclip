@@ -1,0 +1,15 @@
+# Spline activation configuration
+# Learnable piecewise-linear activation
+
+# Optimal settings from NB18:
+# - k=15 knots
+# - ReLU initialization
+# - Input range (-3, 3)
+
+model:
+  activation:
+    type: "spline"
+    n_knots: 15
+    input_range: [-3.0, 3.0]
+    init: "relu"  # relu, linear, zero (NEVER use zero!)
+    learnable_positions: false

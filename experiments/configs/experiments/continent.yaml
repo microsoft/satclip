@@ -1,0 +1,36 @@
+# Continental/Regional experiments
+# Tests at different spatial scales
+
+experiment:
+  name: "continent"
+  description: "Regional analysis at continental scale"
+
+# Define region presets
+regions:
+  usa:
+    region: [-125, -65, 25, 50]
+    name: "USA"
+  north_america:
+    region: [-170, -50, 15, 75]
+    name: "North America"
+  europe:
+    region: [-10, 40, 35, 70]
+    name: "Europe"
+  asia:
+    region: [60, 150, 10, 55]
+    name: "Asia"
+  global:
+    region: null
+    name: "Global"
+
+# Default: use USA
+data:
+  task: "regression"
+  dataset: "elevation"
+  n_samples: 10000
+  test_fraction: 0.3
+  region: [-125, -65, 25, 50]  # USA
+
+training:
+  max_epochs: 80
+  learning_rate: 0.001

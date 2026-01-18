@@ -1,0 +1,6 @@
+# ReLU activation configuration
+# Baseline activation - fastest and often best with SH encoding
+
+model:
+  activation:
+    type: "relu"

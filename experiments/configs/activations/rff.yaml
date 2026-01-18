@@ -1,0 +1,13 @@
+# RFF (Random Fourier Features) activation configuration
+# WARNING: Do NOT combine with SH encoding - they interfere!
+
+# RFF architecture notes:
+# - RFF encoding -> Linear output (no intermediate activation)
+# - Use with raw coordinate encoding only
+
+model:
+  activation:
+    type: "rff"
+    n_features: 256
+    sigma: 10.0
+    learnable: false  # Learnable frequencies are catastrophic (from NB17)

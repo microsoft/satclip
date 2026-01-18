@@ -1,0 +1,8 @@
+# Raw coordinate encoding
+# Simple normalized (lon, lat) - 2 dimensions
+
+model:
+  encoding:
+    type: "raw"
+    normalize: true
+    output_range: [-1.0, 1.0]

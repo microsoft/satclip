@@ -1,0 +1,31 @@
+# Resolution experiments
+# Tests at different spatial resolutions
+
+experiment:
+  name: "resolution"
+  description: "Multi-resolution analysis"
+
+# Resolution presets (for population data)
+resolutions:
+  fine:
+    resolution: "15_min"  # ~28km
+    n_samples: 15000
+  medium:
+    resolution: "30_min"  # ~55km
+    n_samples: 10000
+  coarse:
+    resolution: "1_degree"  # ~111km
+    n_samples: 5000
+
+# Default: fine resolution
+data:
+  task: "regression"
+  dataset: "population"
+  resolution: "15_min"
+  n_samples: 15000
+  test_fraction: 0.3
+  log_transform: true
+
+training:
+  max_epochs: 100
+  learning_rate: 0.001

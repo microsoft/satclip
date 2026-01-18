@@ -1,0 +1,19 @@
+# Population density prediction experiment
+# Tests on GPW population data
+
+experiment:
+  name: "population"
+  description: "Population density prediction from coordinates"
+
+data:
+  task: "regression"
+  dataset: "population"
+  n_samples: 15000
+  test_fraction: 0.3
+  resolution: "15_min"  # 15_min, 30_min, 1_degree
+  log_transform: true
+  data_path: null  # REQUIRED: path to GPW GeoTIFF
+
+training:
+  max_epochs: 100
+  learning_rate: 0.001

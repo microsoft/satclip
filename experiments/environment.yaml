@@ -1,0 +1,59 @@
+# Conda environment for learned activations experiments
+#
+# Create: conda env create -f experiments/environment.yaml
+# Update: conda env update -f experiments/environment.yaml
+# Activate: conda activate satclip
+
+name: satclip
+
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python
+  - python=3.10
+
+  # PyTorch (will auto-select CUDA/MPS/CPU based on platform)
+  - pytorch>=2.0
+  - torchvision
+  - torchaudio
+
+  # Lightning
+  - pip
+
+  # Scientific
+  - numpy
+  - scipy
+  - pandas
+  - scikit-learn
+
+  # Geospatial
+  - xarray
+  - netcdf4
+  - rasterio
+  - shapely
+  - pyproj
+
+  # Visualization
+  - matplotlib
+  - seaborn
+
+  # Utils
+  - pyyaml
+  - tqdm
+  - rich
+
+  # Pip packages
+  - pip:
+    - lightning>=2.0
+    - torchgeo>=0.5
+    - timm>=0.9
+    - einops
+    - datasets  # HuggingFace datasets
+    - huggingface_hub
+
+    # Optional: Weights & Biases logging
+    # - wandb

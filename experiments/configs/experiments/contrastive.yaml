@@ -1,0 +1,49 @@
+# SatCLIP-style contrastive learning experiment
+# Trains location encoder with image encoder
+
+experiment:
+  name: "contrastive"
+  description: "Contrastive learning with satellite imagery"
+
+model:
+  # Vision encoder
+  vision_encoder: "moco_resnet18"  # moco_resnet18, moco_resnet50, moco_vit16
+  embed_dim: 256
+
+  # Location encoder
+  encoding:
+    type: "spherical_harmonics"
+    legendre_polys: 32
+
+  network:
+    hidden_dim: 256
+    output_dim: 256
+    num_layers: 2
+
+  activation:
+    type: "siren"
+    w0: 1.0
+    w0_initial: 30.0
+
+  # Contrastive learning
+  temperature: 0.07
+
+data:
+  task: "contrastive"
+  dataset: "satclip"  # Uses HuggingFace dataset
+  batch_size: 512
+  num_workers: 8
+  val_split: 0.1
+
+training:
+  max_epochs: 500
+  learning_rate: 0.0001
+  weight_decay: 0.01
+
+  # Gradient accumulation for effective larger batch
+  accumulate_grad_batches: 16
+
+logging:
+  checkpoint:
+    save_top_k: 3
+    monitor: "val_loss"

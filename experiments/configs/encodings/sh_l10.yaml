@@ -1,0 +1,8 @@
+# Spherical Harmonics L=10 encoding
+# Standard resolution - 100 dimensions
+
+model:
+  encoding:
+    type: "spherical_harmonics"
+    legendre_polys: 10
+    harmonics_calculation: "analytic"

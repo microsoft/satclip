@@ -1,0 +1,8 @@
+# SIREN activation configuration
+# Sinusoidal activation from SatCLIP original
+
+model:
+  activation:
+    type: "siren"
+    w0: 1.0
+    w0_initial: 30.0

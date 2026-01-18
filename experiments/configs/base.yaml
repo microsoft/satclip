@@ -1,0 +1,113 @@
+# Base configuration for learned activations experiments
+# Override specific values in experiment configs
+
+# Experiment metadata
+experiment:
+  name: "baseline"
+  description: "Base experiment configuration"
+  seed: 42
+
+# Model configuration
+model:
+  # Positional encoding
+  encoding:
+    type: "spherical_harmonics"  # spherical_harmonics, raw, rff, cartesian3d
+    legendre_polys: 10  # For SH: 10, 20, 40
+    harmonics_calculation: "analytic"  # analytic, closed-form
+
+  # Neural network
+  network:
+    hidden_dim: 256
+    output_dim: 256
+    num_layers: 3
+    dropout: 0.0
+
+  # Activation function
+  activation:
+    type: "relu"  # relu, siren, spline, rff
+    # SIREN-specific
+    w0: 1.0
+    w0_initial: 30.0
+    # Spline-specific
+    n_knots: 15
+    input_range: [-3.0, 3.0]
+    init: "relu"
+    # RFF-specific (for RFF activation, not encoding)
+    n_features: 256
+    sigma: 10.0
+
+# Data configuration
+data:
+  # Task type
+  task: "regression"  # regression, classification, contrastive
+
+  # Dataset
+  dataset: "elevation"  # elevation, population, checkerboard, gaussian_mixture, satclip
+  n_samples: 10000
+  test_fraction: 0.3
+
+  # Optional region filter (lon_min, lon_max, lat_min, lat_max)
+  region: null
+
+  # DataLoader
+  batch_size: 256
+  num_workers: 4
+
+  # Paths
+  data_path: null  # Path to data file if required
+  cache_dir: null  # Cache directory for downloads
+
+# Training configuration
+training:
+  max_epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0
+
+  # Optimizer
+  optimizer: "adamw"  # adam, adamw, sgd
+
+  # Scheduler
+  scheduler: null  # null, cosine, step
+  scheduler_params: {}
+
+  # Early stopping
+  early_stopping:
+    enabled: false
+    patience: 10
+    monitor: "val_loss"
+    mode: "min"
+
+  # Gradient clipping
+  gradient_clip_val: null
+
+# Logging configuration
+logging:
+  # Logger type
+  logger: "tensorboard"  # tensorboard, wandb, csv
+
+  # TensorBoard
+  save_dir: "./logs"
+  name: "experiments"
+  version: null
+
+  # Weights & Biases (if using wandb)
+  project: "learned-activations"
+  entity: null
+
+  # Checkpointing
+  checkpoint:
+    save_top_k: 1
+    monitor: "val_loss"
+    mode: "min"
+    save_last: true
+
+# Hardware configuration
+hardware:
+  accelerator: "auto"  # auto, cpu, gpu, mps
+  devices: 1
+  precision: 32  # 32, 16, bf16
+
+# Reproducibility
+reproducibility:
+  deterministic: true
+  benchmark: false

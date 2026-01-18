@@ -1,0 +1,20 @@
+# Checkerboard experiment
+# Tests high-frequency spatial pattern learning
+
+experiment:
+  name: "checkerboard"
+  description: "Checkerboard pattern regression - tests spatial frequency learning"
+
+data:
+  task: "regression"
+  dataset: "checkerboard"
+  n_samples: 10000
+  test_fraction: 0.3
+
+  # Checkerboard-specific
+  grid_size: 10.0  # Degrees per square
+  noise: 0.0
+
+training:
+  max_epochs: 100
+  learning_rate: 0.001
