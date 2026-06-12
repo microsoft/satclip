@@ -5,3 +5,5 @@ satclip_logs/
 __pycache__/
 *.egg-info/
 build/
+dist/
+.pytest_cache/
