@@ -1,17 +1,15 @@
 from collections import OrderedDict
-from typing import Tuple, Union, Optional
+from typing import Tuple, Union
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
-import math
 
 import timm
-import torchgeo.models
 from torchgeo.models import ResNet18_Weights, ResNet50_Weights, ViTSmall16_Weights
-from location_encoder import get_positional_encoding, get_neural_network, LocationEncoder
-from datamodules.s2geo_dataset import S2Geo
+
+from .location_encoder import get_positional_encoding, get_neural_network, LocationEncoder
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -257,12 +255,12 @@ class SatCLIP(nn.Module):
                  # location
                  le_type: str,
                  pe_type: str,
-                 frequency_num: int, 
-                 max_radius: int,  
+                 frequency_num: int,
+                 max_radius: int,
                  min_radius: int,
                  harmonics_calculation: str,
-                 legendre_polys: int=10, 
-                 sh_embedding_dims: int=16, 
+                 legendre_polys: int=10,
+                 sh_embedding_dims: int=16,
                  ffn: bool=True,
                  num_hidden_layers: int=2,
                  capacity: int=256,
@@ -270,7 +268,7 @@ class SatCLIP(nn.Module):
                  **kwargs
                  ):
         super().__init__()
-            
+
         if isinstance(vision_layers, (tuple, list)):
             print('using modified resnet')
             vision_heads = vision_width * 32 // 64
@@ -282,7 +280,7 @@ class SatCLIP(nn.Module):
                 width=vision_width,
                 in_channels=in_channels
             )
-            
+
         elif vision_layers == 'moco_resnet18':
             print('using pretrained moco resnet18')
             weights = ResNet18_Weights.SENTINEL2_ALL_MOCO
@@ -300,7 +298,7 @@ class SatCLIP(nn.Module):
             self.visual.load_state_dict(weights.get_state_dict(progress=True), strict=False)
             self.visual.requires_grad_(False)
             self.visual.fc.requires_grad_(True)
-            
+
         elif vision_layers == 'moco_vit16':
             print('using pretrained moco vit16')
             weights = ViTSmall16_Weights.SENTINEL2_ALL_MOCO
@@ -322,13 +320,13 @@ class SatCLIP(nn.Module):
                 output_dim=embed_dim,
                 in_channels=in_channels
             )
-        
+
         self.posenc = get_positional_encoding(name=le_type, harmonics_calculation=harmonics_calculation, legendre_polys=legendre_polys, min_radius=min_radius, max_radius=max_radius, frequency_num=frequency_num).double()
         self.nnet = get_neural_network(name=pe_type, input_dim=self.posenc.embedding_dim, num_classes=embed_dim, dim_hidden=capacity, num_layers=num_hidden_layers).double()
-        self.location = LocationEncoder(self.posenc, 
+        self.location = LocationEncoder(self.posenc,
                                         self.nnet
         ).double()
-        
+
         self.logit_scale = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
 
         self.initialize_parameters()
@@ -362,7 +360,7 @@ class SatCLIP(nn.Module):
 
     def forward(self, image, coords):
 
-        image_features = self.encode_image(image)     
+        image_features = self.encode_image(image)
         location_features = self.encode_location(coords).float()
         # normalized features
         image_features = image_features / image_features.norm(dim=1, keepdim=True)

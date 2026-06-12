@@ -1,4 +1,4 @@
-from main import *
+from .main import *
 
 def get_satclip(ckpt_path, device, return_all=False):
     ckpt = torch.load(ckpt_path,map_location=device)

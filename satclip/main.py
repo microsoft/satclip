@@ -3,12 +3,17 @@ from pathlib import Path
 
 import lightning.pytorch
 import torch
-from datamodules.s2geo_dataset import S2GeoDataModule
 from lightning.pytorch.cli import LightningCLI
-from loss import SatCLIPLoss
-from model import SatCLIP
+
+from .datamodules.s2geo_dataset import S2GeoDataModule
+from .loss import SatCLIPLoss
+from .model import SatCLIP
 
 torch.set_float32_matmul_precision('high')
+
+# Default training config shipped with the package; resolved relative to this
+# file so training works regardless of the current working directory.
+DEFAULT_CONFIG = Path(__file__).resolve().parent / "configs" / "default.yaml"
 
 class SatCLIPLightningModule(lightning.pytorch.LightningModule):
     def __init__(
@@ -111,7 +116,9 @@ class MyLightningCLI(LightningCLI):
         parser.add_argument("--watchmodel", action="store_true")
 
 
-def cli_main(default_config_filename="./configs/default.yaml"):
+def cli_main(default_config_filename=None):
+    if default_config_filename is None:
+        default_config_filename = str(DEFAULT_CONFIG)
     save_config_fn = default_config_filename.replace(".yaml", "-latest.yaml")
     # modify configs/default.yaml for learning rate etc.
     cli = MyLightningCLI(
@@ -139,7 +146,7 @@ def cli_main(default_config_filename="./configs/default.yaml"):
 
     # Create folder to log configs
     # NOTE: Lightning does not handle config paths with subfolders
-    dirname_cfg = Path(default_config_filename).parent
+    dirname_cfg = Path(default_config_filename).parent.name
     dir_log_cfg = Path(cli.trainer.log_dir) / dirname_cfg
     dir_log_cfg.mkdir(parents=True, exist_ok=True)
 
@@ -150,12 +157,10 @@ def cli_main(default_config_filename="./configs/default.yaml"):
 
 
 if __name__ == "__main__":
-    config_fn = "./configs/default.yaml"
-
     #A100 go vroom vroom 🚗💨
-    if torch.cuda.get_device_name(device=0)=='NVIDIA A100 80GB PCIe':
+    if torch.cuda.is_available() and torch.cuda.get_device_name(device=0) == 'NVIDIA A100 80GB PCIe':
         torch.backends.cuda.matmul.allow_tf32 = True
         print('Superfastmode! 🚀')
     else:
         torch.backends.cuda.matmul.allow_tf32 = False
-    cli_main(config_fn)
+    cli_main()

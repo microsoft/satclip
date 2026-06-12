@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools >= 77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "satclip"
+description = "A global, general-purpose geographic location encoder"
+version = "0.0.1"
+authors = [
+  {name="Konstantin Klemmer"},
+  {name="Esther Rolf"},
+  {name="Caleb Robinson"},
+  {name="Lester Mackey"},
+  {name="Marc Rußwurm"},
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+# Direct (first-order) imports of the `satclip` package. Versions of the heavier
+# scientific stack (numpy, sympy, torch, ...) are largely constrained by
+# torchgeo/lightning, but are listed explicitly so the package does not silently
+# rely on transitive dependencies.
+dependencies = [
+    "albumentations",
+    "einops",
+    "huggingface_hub",
+    "lightning >=2.2,<3",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "rasterio >=1.3.10",
+    "sympy",
+    "timm",
+    "torch >=1.13",
+    "torchgeo >=0.5",  # Forces Python 3.9+
+    "torchvision",
+]
+
+[project.optional-dependencies]
+# Extra dependencies used by the example notebooks only.
+examples = [
+    "scikit-learn",
+]
+# Development / CI tooling.
+dev = [
+    "build",
+    "pytest",
+    "ruff",
+]
+
+[project.scripts]
+satclip-train = "satclip.main:cli_main"
+
+[project.urls]
+Homepage = "https://github.com/microsoft/satclip"
+Repository = "https://github.com/microsoft/satclip.git"
+Issues = "https://github.com/microsoft/satclip/issues"
+
+[tool.setuptools.packages.find]
+include = ["satclip", "satclip.*"]
+
+[tool.setuptools.package-data]
+# Ship the default training config so `python -m satclip.main` works after install.
+satclip = ["configs/*.yaml"]
