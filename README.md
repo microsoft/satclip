@@ -32,17 +32,23 @@ with torch.no_grad():
 
 ## Training
 
-You first need to download the *S2-100k* dataset. This can be done directly via [Hugging Face](https://huggingface.co/datasets/davanstrien/satclip), using the `huggingface_hub` library:
+You first need to download the *S2-100K* dataset. This can be done directly via [Hugging Face](https://huggingface.co/datasets/torchgeo/s2-100k), using the `huggingface_hub` library:
 ```python
 from huggingface_hub import snapshot_download
-snapshot_download("davanstrien/satclip", local_dir='.', repo_type='dataset')
+snapshot_download("torchgeo/s2-100k", local_dir='.', repo_type='dataset')
 ```
 Alternatively you can clone the repository:
 ```bash
-git clone https://huggingface.co/datasets/davanstrien/satclip
+git clone https://huggingface.co/datasets/torchgeo/s2-100k
 ```
 
-Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running:
+The images are distributed as 100 sharded tar files under `data/`. Extract them into an `images/` folder so that the dataset directory contains `index.csv` and `images/patch_<N>.tif`, as expected by the training data loader:
+```bash
+mkdir -p images
+for f in data/shard-*.tar; do tar -xf "$f" -C images; done
+```
+
+Now, to train **SatCLIP** models, set the paths correctly (point `data.data_dir` in `satclip/configs/default.yaml` to this dataset directory), adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running:
 ```bash
 cd satclip
 python main.py
@@ -50,7 +56,7 @@ python main.py
 
 ### Use of the S2-100K dataset
 
-The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images sampled from Sentinel-2 via the [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/). Copernicus Sentinel data is captured between Jan 1, 2021 and May 17, 2023. The dataset is sampled approximately uniformly over landmass and only includes images without cloud coverage. The dataset is available for research purposes only. If you use the dataset, please cite our paper. More information on the dataset can be found in our [paper](https://arxiv.org/abs/2311.17179).
+The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images (256×256 px, 12 bands, sampled at 10 m resolution) sampled from Sentinel-2 via the [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/). Copernicus Sentinel data is captured between Jan 1, 2021 and May 17, 2023. The dataset is sampled approximately uniformly over landmass and only includes images without cloud coverage. If you use the dataset, please cite our paper. More information on the dataset can be found on the [Hugging Face dataset page](https://huggingface.co/datasets/torchgeo/s2-100k) and in our [paper](https://arxiv.org/abs/2311.17179).
 
 ## Pretrained Models
 
@@ -58,7 +64,16 @@ The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images samp
 
 *Visualization of embeddings obtained by different location encoders for locations around the globe.*
 
-We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded directly via [Hugging Face](https://huggingface.co/models?other=arxiv:2311.17179):
+We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models are hosted on [Hugging Face](https://huggingface.co/models?other=arxiv:2311.17179):
+
+| Model | Vision encoder | Resolution $L$ | Checkpoint file |
+| --- | --- | --- | --- |
+| [microsoft/SatCLIP-ResNet18-L10](https://huggingface.co/microsoft/SatCLIP-ResNet18-L10) | ResNet18 | 10 | `satclip-resnet18-l10.ckpt` |
+| [microsoft/SatCLIP-ResNet18-L40](https://huggingface.co/microsoft/SatCLIP-ResNet18-L40) | ResNet18 | 40 | `satclip-resnet18-l40.ckpt` |
+| [microsoft/SatCLIP-ResNet50-L10](https://huggingface.co/microsoft/SatCLIP-ResNet50-L10) | ResNet50 | 10 | `satclip-resnet50-l10.ckpt` |
+| [microsoft/SatCLIP-ResNet50-L40](https://huggingface.co/microsoft/SatCLIP-ResNet50-L40) | ResNet50 | 40 | `satclip-resnet50-l40.ckpt` |
+| [microsoft/SatCLIP-ViT16-L10](https://huggingface.co/microsoft/SatCLIP-ViT16-L10) | ViT-B/16 | 10 | `satclip-vit16-l10.ckpt` |
+| [microsoft/SatCLIP-ViT16-L40](https://huggingface.co/microsoft/SatCLIP-ViT16-L40) | ViT-B/16 | 40 | `satclip-vit16-l40.ckpt` |
 
 Usage of pretrained models is simple. Simply specify the SatCLIP model you want to access, e.g. `satclip-vit16-l40`:
 ```python
