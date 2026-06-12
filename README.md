@@ -58,6 +58,24 @@ python main.py
 
 The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images (256×256 px, 12 bands, sampled at 10 m resolution) sampled from Sentinel-2 via the [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/). Copernicus Sentinel data is captured between Jan 1, 2021 and May 17, 2023. The dataset is sampled approximately uniformly over landmass and only includes images without cloud coverage. If you use the dataset, please cite our paper. More information on the dataset can be found on the [Hugging Face dataset page](https://huggingface.co/datasets/torchgeo/s2-100k) and in our [paper](https://arxiv.org/abs/2311.17179).
 
+### Downstream evaluation datasets
+
+We evaluate SatCLIP location embeddings on a range of downstream tasks. The table below lists the datasets used in our [paper](https://arxiv.org/abs/2311.17179v3), the task they are used for, and where to obtain them.
+
+| Task | Type | Source |
+| --- | --- | --- |
+| Air temperature / precipitation | Regression | [Hooker et al. (2018)](https://www.nature.com/articles/sdata2018246) (see notebook [B01](notebooks/B01_Example_Air_Temperature_Prediction.ipynb)) |
+| Median income | Regression | [Jia & Benson (2020)](https://github.com/000Justin000/gnn-residual-correlation) |
+| California housing | Regression | [Pace & Barry (1997)](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) |
+| Elevation | Regression | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Population density | Regression | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Country classification | Classification | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Biome classification | Classification | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Ecoregion classification | Classification | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Species classification (image localization) | Classification | [iNaturalist 2018](https://github.com/visipedia/inat_comp/tree/master/2018) ([Van Horn et al., 2018](https://arxiv.org/abs/1707.06642)) |
+
+The five datasets we created for this paper — **Elevation**, **Population density**, **Country**, **Biome** and **Ecoregion** — are available in a single [Google Drive folder](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (see [issue #6](https://github.com/microsoft/satclip/issues/6)). The biome and ecoregion labels are derived from [Dinerstein et al. (2017)](https://doi.org/10.1093/biosci/bix014).
+
 ## Pretrained Models
 
 ![CLIP](/figures/globes.gif)
