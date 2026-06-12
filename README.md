@@ -32,19 +32,23 @@ with torch.no_grad():
 
 ## Training
 
-You first need to download the *S2-100k* dataset in `/data/s2`. First, download the index file:
-```bash
-cd data/s2
-wget https://satclip.z13.web.core.windows.net/satclip/index.csv
+You first need to download the *S2-100K* dataset. This can be done directly via [Hugging Face](https://huggingface.co/datasets/torchgeo/s2-100k), using the `huggingface_hub` library:
+```python
+from huggingface_hub import snapshot_download
+snapshot_download("torchgeo/s2-100k", local_dir='.', repo_type='dataset')
 ```
-Within `/data/s2`, navigate to `/images`, download all images and unpack them:
+Alternatively you can clone the repository:
 ```bash
-cd images
-wget https://satclip.z13.web.core.windows.net/satclip/satclip.tar
-tar -xf satclip.tar
+git clone https://huggingface.co/datasets/torchgeo/s2-100k
 ```
 
-Now, to train **SatCLIP** models, set the paths correctly, adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running:
+The images are distributed as 100 sharded tar files under `data/`. Extract them into an `images/` folder so that the dataset directory contains `index.csv` and `images/patch_<N>.tif`, as expected by the training data loader:
+```bash
+mkdir -p images
+for f in data/shard-*.tar; do tar -xf "$f" -C images; done
+```
+
+Now, to train **SatCLIP** models, set the paths correctly (point `data.data_dir` in `satclip/configs/default.yaml` to this dataset directory), adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running:
 ```bash
 cd satclip
 python main.py
@@ -52,7 +56,25 @@ python main.py
 
 ### Use of the S2-100K dataset
 
-The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images sampled from Sentinel-2 via the [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/). Copernicus Sentinel data is captured between Jan 1, 2021 and May 17, 2023. The dataset is sampled approximately uniformly over landmass and only includes images without cloud coverage. The dataset is available for research purposes only. If you use the dataset, please cite our paper. More information on the dataset can be found in our [paper](https://arxiv.org/abs/2311.17179).
+The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images (256×256 px, 12 bands, sampled at 10 m resolution) sampled from Sentinel-2 via the [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/). Copernicus Sentinel data is captured between Jan 1, 2021 and May 17, 2023. The dataset is sampled approximately uniformly over landmass and only includes images without cloud coverage. If you use the dataset, please cite our paper. More information on the dataset can be found on the [Hugging Face dataset page](https://huggingface.co/datasets/torchgeo/s2-100k) and in our [paper](https://arxiv.org/abs/2311.17179).
+
+### Downstream evaluation datasets
+
+We evaluate SatCLIP location embeddings on a range of downstream tasks. The table below lists the datasets used in our [paper](https://arxiv.org/abs/2311.17179v3), the task they are used for, and where to obtain them.
+
+| Task | Type | Source |
+| --- | --- | --- |
+| Air temperature / precipitation | Regression | [Hooker et al. (2018)](https://www.nature.com/articles/sdata2018246) (see notebook [B01](notebooks/B01_Example_Air_Temperature_Prediction.ipynb)) |
+| Median income | Regression | [Jia & Benson (2020)](https://github.com/000Justin000/gnn-residual-correlation) |
+| California housing | Regression | [Pace & Barry (1997)](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) |
+| Elevation | Regression | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Population density | Regression | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Country classification | Classification | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Biome classification | Classification | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Ecoregion classification | Classification | [SatCLIP downstream data](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (released by the authors) |
+| Species classification (image localization) | Classification | [iNaturalist 2018](https://github.com/visipedia/inat_comp/tree/master/2018) ([Van Horn et al., 2018](https://arxiv.org/abs/1707.06642)) |
+
+The five datasets we created for this paper — **Elevation**, **Population density**, **Country**, **Biome** and **Ecoregion** — are available in a single [Google Drive folder](https://drive.google.com/drive/folders/1tI2qo6iioRrv3P1OxSXwHKObpLCrinad?usp=sharing) (see [issue #6](https://github.com/microsoft/satclip/issues/6)). The biome and ecoregion labels are derived from [Dinerstein et al. (2017)](https://doi.org/10.1093/biosci/bix014).
 
 ## Pretrained Models
 
@@ -60,29 +82,35 @@ The S2-100K dataset is a dataset of 100,000 multi-spectral satellite images samp
 
 *Visualization of embeddings obtained by different location encoders for locations around the globe.*
 
-We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models can be downloaded as follows:
-* SatCLIP-ResNet18-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l10.ckpt`
-* SatCLIP-ResNet18-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet18-l40.ckpt`
-* SatCLIP-ResNet50-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet50-l10.ckpt`
-* SatCLIP-ResNet50-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-resnet50-l40.ckpt`
-* SatCLIP-ViT16-L10: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-vit16-l10.ckpt`
-* SatCLIP-ViT16-L40: `wget https://satclip.z13.web.core.windows.net/satclip/satclip-vit16-l40.ckpt`
+We provide six pretrained SatCLIP models, trained with different vision encoders and spatial resolution hyperparameters $L$ (these indicate the number of Legendre polynomials used for spherical harmonics location encoding. Please refer to our paper for more details). The pretrained models are hosted on [Hugging Face](https://huggingface.co/models?other=arxiv:2311.17179):
 
-Usage of pretrained models is simple:
+| Model | Vision encoder | Resolution $L$ | Checkpoint file |
+| --- | --- | --- | --- |
+| [microsoft/SatCLIP-ResNet18-L10](https://huggingface.co/microsoft/SatCLIP-ResNet18-L10) | ResNet18 | 10 | `satclip-resnet18-l10.ckpt` |
+| [microsoft/SatCLIP-ResNet18-L40](https://huggingface.co/microsoft/SatCLIP-ResNet18-L40) | ResNet18 | 40 | `satclip-resnet18-l40.ckpt` |
+| [microsoft/SatCLIP-ResNet50-L10](https://huggingface.co/microsoft/SatCLIP-ResNet50-L10) | ResNet50 | 10 | `satclip-resnet50-l10.ckpt` |
+| [microsoft/SatCLIP-ResNet50-L40](https://huggingface.co/microsoft/SatCLIP-ResNet50-L40) | ResNet50 | 40 | `satclip-resnet50-l40.ckpt` |
+| [microsoft/SatCLIP-ViT16-L10](https://huggingface.co/microsoft/SatCLIP-ViT16-L10) | ViT-B/16 | 10 | `satclip-vit16-l10.ckpt` |
+| [microsoft/SatCLIP-ViT16-L40](https://huggingface.co/microsoft/SatCLIP-ViT16-L40) | ViT-B/16 | 40 | `satclip-vit16-l40.ckpt` |
+
+Usage of pretrained models is simple. Simply specify the SatCLIP model you want to access, e.g. `satclip-vit16-l40`:
 ```python
+from huggingface_hub import hf_hub_download
 from load import get_satclip
+import torch
 
-device = 'cuda'
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
-c = torch.randn(32, 2) # Represents a batch of 32 locations (lon/lat)
+c = torch.randn(32, 2)  # Represents a batch of 32 locations (lon/lat)
 
-model = get_satclip('path_to_satclip', device=device) #Only loads location encoder by default
+model = get_satclip(
+    hf_hub_download("microsoft/SatCLIP-ViT16-L40", "satclip-vit16-l40.ckpt"),
+    device=device,
+)  # Only loads location encoder by default
 model.eval()
 with torch.no_grad():
-  emb  = model(c.double().to(device)).detach().cpu()
+    emb = model(c.double().to(device)).detach().cpu()
 ```
-
-You can also access SatCLIP model weights directly via [Hugging Face](https://huggingface.co/microsoft?search_models=satclip).
 
 ## Examples
 
@@ -104,11 +132,16 @@ Examples on how to obtain and use pretrained SatCLIP embeddings can be found in 
 ## Citation
 
 ```bibtex
-@article{klemmer2023satclip,
-  title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
-  author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Ru{\ss}wurm, Marc},
-  journal={arXiv preprint arXiv:2311.17179},
-  year={2023}
+@article{klemmer2025satclip,
+    title={SatCLIP: Global, General-Purpose Location Embeddings with Satellite Imagery},
+    volume={39},
+    url={https://ojs.aaai.org/index.php/AAAI/article/view/32457}, DOI={10.1609/aaai.v39i4.32457},
+    number={4},
+    journal={Proceedings of the AAAI Conference on Artificial Intelligence},
+    author={Klemmer, Konstantin and Rolf, Esther and Robinson, Caleb and Mackey, Lester and Rußwurm, Marc},
+    year={2025},
+    month={Apr.},
+    pages={4347-4355}
 }
 ```
 
