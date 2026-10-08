@@ -1,5 +1,6 @@
 import torch
-from location_encoder import get_neural_network, get_positional_encoding, LocationEncoder
+
+from .location_encoder import get_neural_network, get_positional_encoding, LocationEncoder
 
 
 def get_satclip_loc_encoder(ckpt_path, device):
@@ -14,7 +15,7 @@ def get_satclip_loc_encoder(ckpt_path, device):
         hp['max_radius'],
         hp['frequency_num']
     )
-    
+
     nnet = get_neural_network(
         hp['pe_type'],
         posenc.embedding_dim,
@@ -25,12 +26,11 @@ def get_satclip_loc_encoder(ckpt_path, device):
 
     # only load nnet params from state dict
     state_dict = ckpt['state_dict']
-    state_dict = {k[k.index('nnet'):]:state_dict[k] 
+    state_dict = {k[k.index('nnet'):]:state_dict[k]
                   for k in state_dict.keys() if 'nnet' in k}
-    
+
     loc_encoder = LocationEncoder(posenc, nnet).double()
     loc_encoder.load_state_dict(state_dict)
     loc_encoder.eval()
 
     return loc_encoder
-        

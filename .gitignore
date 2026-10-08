@@ -1,0 +1,9 @@
+# SatCLIP files
+satclip_logs/
+
+# Python
+__pycache__/
+*.egg-info/
+build/
+dist/
+.pytest_cache/

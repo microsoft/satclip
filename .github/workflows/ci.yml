@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Build & test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Oldest supported and newest Python.
+        python-version: ["3.9", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install torch (CPU)
+        # Install the CPU-only torch build first to keep CI lightweight and avoid
+        # pulling large CUDA wheels via transitive dependencies.
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build
+
+      - name: Install wheel
+        # Install the built wheel (not an editable install) so packaging mistakes,
+        # e.g. missing package data, are caught.
+        run: pip install "$(ls dist/*.whl)[dev,examples]"
+
+      - name: Run tests against the installed package
+        # Run from outside the repository so `import satclip` resolves to the
+        # installed wheel rather than the source tree.
+        run: |
+          cp -r tests "$RUNNER_TEMP/tests"
+          cd "$RUNNER_TEMP"
+          python -c "import satclip; print('satclip public API:', satclip.__all__)"
+          satclip-train --help > /dev/null
+          pytest -q tests

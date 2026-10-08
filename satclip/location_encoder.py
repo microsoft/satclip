@@ -1,11 +1,11 @@
-from torch import nn, optim
 import math
+
 import torch
 import torch.nn.functional as F
 from einops import rearrange
-import numpy as np
-from datetime import datetime
-import positional_encoding as PE
+from torch import nn
+
+from . import positional_encoding as PE
 
 """
 FCNet
@@ -110,7 +110,7 @@ class SirenNet(nn.Module):
                 x *= rearrange(mod, 'd -> () d')
 
         return self.last_layer(x)
-    
+
 class Sine(nn.Module):
     def __init__(self, w0 = 1.):
         super().__init__()

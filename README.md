@@ -8,13 +8,27 @@
 
 SatCLIP trains location and image encoders via contrastive learning, by matching images to their corresponding locations. This is analogous to the CLIP approach, which matches images to their corresponding text. Through this process, the location encoder learns characteristics of a location, as represented by satellite imagery. For more details, check out our [paper](https://arxiv.org/abs/2311.17179).
 
+## Installation
+
+SatCLIP is packaged as a Python module (Python 3.9+). Install it directly from GitHub:
+```bash
+pip install git+https://github.com/microsoft/satclip.git
+```
+Or, for a local/editable install (e.g. for training or development):
+```bash
+git clone https://github.com/microsoft/satclip.git
+cd satclip
+pip install -e .
+```
+Once installed, `satclip` can be imported from any directory — no need to set `PYTHONPATH`.
+
 ## Overview
 
 Usage of SatCLIP is simple:
 
 ```python
-from model import *
-from location_encoder import *
+import torch
+from satclip.model import SatCLIP
 
 model = SatCLIP(
     embed_dim=512,
@@ -48,11 +62,11 @@ mkdir -p images
 for f in data/shard-*.tar; do tar -xf "$f" -C images; done
 ```
 
-Now, to train **SatCLIP** models, set the paths correctly (point `data.data_dir` in `satclip/configs/default.yaml` to this dataset directory), adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running:
+Now, to train **SatCLIP** models, run the `satclip-train` command (installed with the package), pointing it at this dataset directory:
 ```bash
-cd satclip
-python main.py
+satclip-train --data.data_dir /path/to/s2-100k
 ```
+Training uses the default config in [`satclip/configs/default.yaml`](satclip/configs/default.yaml). Any option can be overridden on the command line (see `satclip-train --help`), or you can pass your own config, e.g. a modified copy of the default: `satclip-train --config path/to/config.yaml`. Logs, checkpoints and the resolved config (`default-latest.yaml`) are written to `satclip_logs/` in the current directory. `python -m satclip.main` is equivalent.
 
 ### Use of the S2-100K dataset
 
@@ -96,7 +110,7 @@ We provide six pretrained SatCLIP models, trained with different vision encoders
 Usage of pretrained models is simple. Simply specify the SatCLIP model you want to access, e.g. `satclip-vit16-l40`:
 ```python
 from huggingface_hub import hf_hub_download
-from load import get_satclip
+from satclip.load import get_satclip
 import torch
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
