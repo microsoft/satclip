@@ -10,7 +10,7 @@ SatCLIP trains location and image encoders via contrastive learning, by matching
 
 ## Installation
 
-SatCLIP is packaged as a Python module. Install it directly from GitHub:
+SatCLIP is packaged as a Python module (Python 3.9+). Install it directly from GitHub:
 ```bash
 pip install git+https://github.com/microsoft/satclip.git
 ```
@@ -62,11 +62,11 @@ mkdir -p images
 for f in data/shard-*.tar; do tar -xf "$f" -C images; done
 ```
 
-Now, to train **SatCLIP** models, set the paths correctly (point `data.data_dir` in `satclip/configs/default.yaml` to this dataset directory), adapt training configs in `satclip/configs/default.yaml` and train SatCLIP by running the training module from the repository root:
+Now, to train **SatCLIP** models, run the `satclip-train` command (installed with the package), pointing it at this dataset directory:
 ```bash
-python -m satclip.main
+satclip-train --data.data_dir /path/to/s2-100k
 ```
-This requires an editable install (`pip install -e .`, see [Installation](#installation)). You can point to a custom config with `python -m satclip.main --config path/to/config.yaml`.
+Training uses the default config in [`satclip/configs/default.yaml`](satclip/configs/default.yaml). Any option can be overridden on the command line (see `satclip-train --help`), or you can pass your own config, e.g. a modified copy of the default: `satclip-train --config path/to/config.yaml`. Logs, checkpoints and the resolved config (`default-latest.yaml`) are written to `satclip_logs/` in the current directory. `python -m satclip.main` is equivalent.
 
 ### Use of the S2-100K dataset
 

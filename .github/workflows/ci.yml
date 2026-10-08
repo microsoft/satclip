@@ -12,7 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.11"]
+        # Oldest supported and newest Python.
+        python-version: ["3.9", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -29,11 +30,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 
-      - name: Install package
-        run: pip install -e ".[dev,examples]"
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build
 
-      - name: Import smoke test
-        run: python -c "import satclip; print('satclip public API:', satclip.__all__)"
+      - name: Install wheel
+        # Install the built wheel (not an editable install) so packaging mistakes,
+        # e.g. missing package data, are caught.
+        run: pip install "$(ls dist/*.whl)[dev,examples]"
 
-      - name: Run tests
-        run: pytest -q
+      - name: Run tests against the installed package
+        # Run from outside the repository so `import satclip` resolves to the
+        # installed wheel rather than the source tree.
+        run: |
+          cp -r tests "$RUNNER_TEMP/tests"
+          cd "$RUNNER_TEMP"
+          python -c "import satclip; print('satclip public API:', satclip.__all__)"
+          satclip-train --help > /dev/null
+          pytest -q tests
